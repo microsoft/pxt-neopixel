@@ -1,0 +1,11 @@
+{
+    "editor.formatOnType": true,
+    "files.autoSave": "afterDelay",
+    "search.exclude": {
+        "**/built": true,
+        "**/node_modules": true,
+        "**/yotta_modules": true,
+        "**/yotta_targets": true,
+        "**/pxt_modules": true
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "name": "neopixel",
+    "version": "0.0.1",
+    "description": "AdaFruit NeoPixel driver",
+    "license": "MIT",
+    "dependencies": {
+        "microbit": "*"
+    },
+    "files": [
+        "README.md",
+        "neopixel.ts",
+        "sendbuffer.asm"
+    ],
+    "testFiles": [
+        "neotest.ts"
+    ],
+    "yotta": {
+        "config": {
+            "microbit-dal": {
+                "bluetooth": {
+                    "enabled": 0
+                }
+            }
+        }
+    },
+    "public": true
+}
