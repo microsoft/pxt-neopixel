@@ -71,7 +71,17 @@ namespace neopixel {
         setBrigthness(brightness: number): void {
             this.brightness = brightness;
         }
-        
+
+        /**
+         * Set the color of all LEDs in the strip
+         */
+        //% blockId="neopixel_set_strip_color" block="%strip|set string color|red: %red|green: %green|blue: %blue" blockGap=8
+        //% weight=59
+        setStripColor(red: number, green: number, blue: number): void {
+            for (let i = 0; i < this.length(); ++i)
+                this.setPixelColor(i, red, green, blue);
+        }
+
         /**
          * Shift LEDs forward and clear with zeros.
          * @param off number of pixels to shift forward, eg: 1
@@ -88,13 +98,13 @@ namespace neopixel {
          */
         //% blockId="neopixel_rotate" block="%strip|rotate pixels forward by %off" blockGap=8
         //% weight=39
-        rotate(off:number = 1): void {
+        rotate(off: number = 1): void {
             this.buf.rotate(-off * 3)
         }
 
         /**
          * Set the pin where the neopixel is connected, defaults to P0.
-         */        
+         */
         setPin(pin: DigitalPin): void {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0)
