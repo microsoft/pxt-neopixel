@@ -52,6 +52,7 @@ namespace neopixel {
         //% weight=76
         clear(): void {
             this.buf.fill(0);
+            this.show();
         }
 
         /**
