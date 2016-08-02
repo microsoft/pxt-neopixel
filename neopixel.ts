@@ -25,6 +25,7 @@ namespace neopixel {
     export class Strip {
         buf: Buffer;
         pin: DigitalPin;
+        // TODO: encode as bytes instead of 32bit
         brightness: number;
         start: number; // start offset in LED strip
         _length: number; // number of LEDs
@@ -33,12 +34,12 @@ namespace neopixel {
          * Shows all LEDs to a given color (range 0-255 for r, g, b). 
          * @param color RGB color of the LED
          */
-        //% blockId="neopixel_set_strip_color" block="%strip|show color %color=neopixel_colors" 
+        //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
         //% weight=85
-        showColor(color: number) {
-            let red = (color >> 16) & 0x0ff;
-            let green = (color >> 8) & 0x0ff;
-            let blue = (color) & 0x0ff;
+        showColor(rgb: number) {
+            let red = (rgb >> 16) & 0x0ff;
+            let green = (rgb >> 8) & 0x0ff;
+            let blue = (rgb) & 0x0ff;
 
             let br = this.brightness;
             if (br < 255) {
@@ -123,13 +124,13 @@ namespace neopixel {
         //% blockId="neopixel_set_brightness" block="%strip|set brightness %brightness" blockGap=8
         //% weight=59
         setBrigthness(brightness: number): void {
-            this.brightness = brightness;
+            this.brightness = brightness & 0xff;
         }
 
         /** 
          * Create a range of LEDs.
          * @param start offset in the LED strip to start the range
-         * @param length number of LEDs in the range. eg: 1
+         * @param length number of LEDs in the range. eg: 4
          */
         //% weight=89
         //% blockId="neopixel_range" block="%strip|range from %start|with %length|leds"
@@ -200,8 +201,8 @@ namespace neopixel {
      * @param blue value of the blue channel between 0 and 255. eg: 255
      */
     //% weight=1
-    //% blockId="neopixel_color" block="red %red|green %green|blue %blue"
-    export function color(red: number, green: number, blue: number): number {
+    //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue"
+    export function rgb(red: number, green: number, blue: number): number {
         return ((red & 0x0ff) << 16) | ((green & 0x0ff) << 8) | (blue & 0x0ff);
     }
 

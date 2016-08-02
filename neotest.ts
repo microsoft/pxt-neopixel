@@ -1,4 +1,22 @@
 let strip = neopixel.create(DigitalPin.P0, 24);
+
+strip.showColor(NeoPixelColors.Red)
+basic.pause(2000)
+strip.showColor(NeoPixelColors.Green)
+basic.pause(1000)
+for (let i = 0; i <= strip.length(); i++) {
+    strip.setPixelColor(i, neopixel.colors(NeoPixelColors.Blue))
+    strip.show()
+    basic.pause(100)
+}
+for (let i = 0; i <= strip.length(); i++) {
+    strip.setPixelColor(i, neopixel.colors(NeoPixelColors.Green))
+    strip.show()
+    basic.pause(100)
+}
+let sub = strip.range(10, 20)
+sub.showColor(NeoPixelColors.Yellow);
+
 let br = 100;
 strip.setBrigthness(100);
 input.onButtonPressed(Button.B, () => {
@@ -39,9 +57,10 @@ while (true) {
     if (rotationMode) {
         strip.rotate();
     } else {
-        strip.setPixelColor(0, x, y, -z);
+        strip.setPixelColor(0, neopixel.rgb(x, y, -z));
         strip.shift(1);
     }
     strip.show();
     basic.pause(100);
 }
+
