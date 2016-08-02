@@ -72,12 +72,12 @@ namespace neopixel {
         setBrigthness(brightness: number): void {
             this.brightness = brightness;
         }
-        
+
         /**
          * Shift LEDs forward and clear with zeros.
          * @param off number of pixels to shift forward, eg: 1
          */
-        //% blockId="neopixel_shift" block="%strip|shift pixels forward by %off" blockGap=8
+        //% blockId="neopixel_shift" block="%strip|shift pixels by %off" blockGap=8
         //% weight=40
         shift(off: number = 1): void {
             this.buf.shift(-off * 3)
@@ -87,15 +87,15 @@ namespace neopixel {
          * Rotate LEDs forward.
          * @param off number of pixels to rotate forward, eg: 1
          */
-        //% blockId="neopixel_rotate" block="%strip|rotate pixels forward by %off" blockGap=8
+        //% blockId="neopixel_rotate" block="%strip|rotate pixels by %off" blockGap=8
         //% weight=39
-        rotate(off:number = 1): void {
+        rotate(off: number = 1): void {
             this.buf.rotate(-off * 3)
         }
 
         /**
          * Set the pin where the neopixel is connected, defaults to P0.
-         */        
+         */
         setPin(pin: DigitalPin): void {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0)
