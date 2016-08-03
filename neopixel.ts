@@ -3,9 +3,12 @@
  */
 enum NeoPixelColors {
     Red = 0xFF0000,
+    Orange = 0xFFA500,
+    Yellow = 0xFFFF00,
     Green = 0x00FF00,
     Blue = 0x0000FF,
-    Yellow = 0xFFFF00,
+    Indigo = 0x4b0082,
+    Violet = 0x8a2be2,
     Purple = 0xFF00FF
 }
 
