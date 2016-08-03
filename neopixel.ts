@@ -51,7 +51,8 @@ namespace neopixel {
                 blue = (blue * br) >> 8;
             }
             let buf = this.buf;
-            for (let i = this.start; i < this._length; ++i) {
+            let end = this.start + this._length;
+            for (let i = this.start; i < end; ++i) {
                 let ledoffset = i * 3;
                 buf[ledoffset + 0] = green;
                 buf[ledoffset + 1] = red;
@@ -70,8 +71,8 @@ namespace neopixel {
         //% blockGap=8
         //% weight=80
         setPixelColor(ledoffset: number, color: number): void {
-            if (ledoffset < this.start
-                || ledoffset > this.start + this._length)
+            if (ledoffset < 0
+                || ledoffset >= this._length)
                 return;
 
             ledoffset = (ledoffset + this.start) * 3;
@@ -142,8 +143,8 @@ namespace neopixel {
             strip.buf = this.buf;
             strip.pin = this.pin;
             strip.brightness = this.brightness;
-            strip.start = this.start + start;
-            strip._length = length;
+            strip.start = this.start + Math.clamp(0, this._length - 1, start);
+            strip._length = Math.clamp(0, this._length - (strip.start - this.start), length);
             return strip;
         }
 
