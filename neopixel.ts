@@ -79,12 +79,18 @@ namespace neopixel {
             const n = this._length;
             const n1 = n - 1;
             let v = (value * n) / high;
-            for (let i = 0; i < n; ++i) {
-                if (v <= i) {
-                    let b = i * 255 / n1;
-                    this.setPixelColor(i, neopixel.rgb(255 - b, 0, b));
+            if (v == 0) {
+                this.setPixelColor(0, 0x666600);
+                for (let i = 1; i < n; ++i)
+                    this.setPixelColor(i, 0);
+            } else {
+                for (let i = 0; i < n; ++i) {
+                    if (i <= v) {
+                        let b = i * 255 / n1;
+                        this.setPixelColor(i, neopixel.rgb(b, 0, 255 - b));
+                    }
+                    else this.setPixelColor(i, 0);
                 }
-                else this.setPixelColor(i, 0);
             }
             this.show();
         }
