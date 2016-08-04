@@ -190,7 +190,7 @@ namespace neopixel {
         //% blockId="neopixel_shift" block="%strip|shift pixels by %offset" blockGap=8
         //% weight=40
         shift(offset: number = 1): void {
-            this.buf.shift(-offset * 3)
+            this.buf.shift(-offset * 3, this.start * 3, this._length * 3)
         }
 
         /**
@@ -201,7 +201,7 @@ namespace neopixel {
         //% blockId="neopixel_rotate" block="%strip|rotate pixels by %offset" blockGap=8
         //% weight=39
         rotate(offset: number = 1): void {
-            this.buf.rotate(-offset * 3)
+            this.buf.rotate(-offset * 3, this.start * 3, this._length * 3)
         }
 
         /**
