@@ -16,6 +16,10 @@ for (let i = 0; i <= strip.length(); i++) {
 }
 let sub = strip.range(10, 20)
 sub.showColor(NeoPixelColors.Yellow);
+basic.pause(200);
+
+sub.showBarGraph(5, 10);
+basic.pause(200);
 
 let br = 100;
 strip.setBrigthness(100);
