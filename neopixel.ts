@@ -38,7 +38,7 @@ namespace neopixel {
          * @param color RGB color of the LED
          */
         //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
-        //% weight=85
+        //% weight=85 blockGap=8
         showColor(rgb: number) {
             let red = (rgb >> 16) & 0x0ff;
             let green = (rgb >> 8) & 0x0ff;
@@ -57,6 +57,34 @@ namespace neopixel {
                 buf[ledoffset + 0] = green;
                 buf[ledoffset + 1] = red;
                 buf[ledoffset + 2] = blue;
+            }
+            this.show();
+        }
+
+        /**
+         * Displays a vertical bar graph based on the `value` and `high` value.
+         * If `high` is 0, the chart gets adjusted automatically.
+         * @param value current value to plot
+         * @param high maximum value, eg: 255
+         */
+        //% weight=84
+        //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value |up to %high" icon="\uf080" blockExternalInputs=true
+        showBarGraph(value: number, high: number): void {
+            if (high <= 0) {
+                this.clear();
+                return;
+            }
+
+            value = Math.abs(value);
+            const n = this._length;
+            const n1 = n - 1;
+            let v = (value * n) / high;
+            for (let i = 0; i < n; ++i) {
+                if (v <= i) {
+                    let b = i * 255 / n1;
+                    this.setPixelColor(i, neopixel.rgb(255 - b, 0, b));
+                }
+                else this.setPixelColor(i, 0);
             }
             this.show();
         }
@@ -162,7 +190,7 @@ namespace neopixel {
         /**
          * Rotate LEDs forward.
          * You need to call ``show`` to make the changes visible.
-         * @param off number of pixels to rotate forward, eg: 1
+         * @param offset number of pixels to rotate forward, eg: 1
          */
         //% blockId="neopixel_rotate" block="%strip|rotate pixels by %offset" blockGap=8
         //% weight=39
