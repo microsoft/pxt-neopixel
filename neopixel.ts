@@ -15,12 +15,12 @@ enum NeoPixelColors {
 /**
  * Different modes for RGB or RGB+W NeoPixel strips
  */
-export enum NeoPixelMode {
+enum NeoPixelMode {
     RGB,
     RGBW
 }
 
-export type HSL = [number, number, number];
+type HSL = [number, number, number];
 
 /**
  * Functions to operate NeoPixel strips.
@@ -284,7 +284,7 @@ namespace neopixel {
      * @param pin the pin where the neopixel is connected.
      * @param numleds number of leds in the strip, eg: 24,30,60,64
      */
-    //% blockId="neopixel_create" block="neopixel|at pin %pin|with %numleds|leds in %mode|mode"
+    //% blockId="neopixel_create" block="NeoPixel|at pin %pin|with %numleds|leds of type %mode=NeoPixelMode.RGB"
     //% weight=90 blockGap=8
     export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
