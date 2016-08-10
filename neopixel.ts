@@ -20,8 +20,6 @@ enum NeoPixelMode {
     RGBW = 1
 }
 
-//type HSL = [number, number, number];
-
 /**
  * Functions to operate NeoPixel strips.
  */
@@ -68,7 +66,7 @@ namespace neopixel {
                 return;
             }
 
-            value = Math.abs(value);
+            value = abs(value);
             const n = this._length;
             const n1 = n - 1;
             let v = (value * n) / high;
@@ -106,7 +104,7 @@ namespace neopixel {
          * @param pixeloffset position of the LED in the strip
          * @param white brightness of the white LED
          */
-        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel color at %pixeloffset|to %white" 
+        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel white LED at %pixeloffset|to %white" 
         //% blockGap=8
         //% weight=80
         setPixelWhiteLED(pixeloffset: number, white: number): void {
@@ -165,8 +163,7 @@ namespace neopixel {
             strip.buf = this.buf;
             strip.pin = this.pin;
             strip.brightness = this.brightness;
-            strip.start = this.start + Math.clamp(0, this._length - 1, start);
-            strip._length = Math.clamp(0, this._length - (strip.start - this.start), length);
+            strip.start = this.start + Math.clamp(0, this._length - (strip.start - this.start), length);
             return strip;
         }
 
@@ -205,7 +202,9 @@ namespace neopixel {
         }
 
         private setAllRGB(rgb: number) {
-            let [red, green, blue]: [number, number, number] = unpack3(rgb);
+            let red = unpackR(rgb);
+            let green = unpackG(rgb);
+            let blue = unpackB(rgb);
             
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
 
@@ -247,7 +246,9 @@ namespace neopixel {
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             pixeloffset = (pixeloffset + this.start) * stride;
 
-            let [red,green,blue]: [number, number, number] = unpack3(rgb);
+            let red = unpackR(rgb);
+            let green = unpackG(rgb);
+            let blue = unpackB(rgb);
 
             let br = this.brightness;
             if (br < 255) {
@@ -284,11 +285,10 @@ namespace neopixel {
      * @param pin the pin where the neopixel is connected.
      * @param numleds number of leds in the strip, eg: 24,30,60,64
      */
-    //% blockId="neopixel_create" block="NeoPixel|at pin %pin|with %numleds|leds"
+    //% blockId="neopixel_create" block="NeoPixel|at pin %pin|with %numleds|leds of type %mode=NeoPixelMode.RGB"
     //% weight=90 blockGap=8
-    export function create(pin: DigitalPin, numleds: number): Strip {
+    export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
-        let mode = NeoPixelMode.RGB;//TODO:  of type %mode=NeoPixelMode.RGB
         let stride = mode === NeoPixelMode.RGB ? 3 : 4;
         strip.buf = pins.createBuffer(numleds * stride);
         strip.setBrigthness(255)
@@ -308,34 +308,8 @@ namespace neopixel {
     //% weight=1
     //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue"
     export function rgb(red: number, green: number, blue: number): number {
-        return pack3(red,green,blue);
+        return packRGB(red,green,blue);
     }
-
-
-    // /**
-    //  * Creates a HSL (hue, saturation, luminosity) color
-    //  * @param hue value of the hue channel between 0 and 360. eg: 360
-    //  * @param sat value of the saturation channel between 0 and 100. eg: 100
-    //  * @param lum value of the luminosity channel between 0 and 100. eg: 100
-    //  */
-    // //% weight=1
-    // //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
-    // export function hsl(hue: number, sat: number, lum: number): HSL {
-    //     return [hue, sat, lum]
-    // }
-
-    //  /**
-    //  * Shifts the hue of a HSL color
-    //  * @param hsl the HSL (hue, saturation, lightness) color
-    //  * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
-    //  */
-    // //% weight=1
-    // //% blockId="neopixel_rotate_hue" block="shift HSL color %hsl|by %offset"
-    // export function rotateHue(hsl: HSL, offset: number): HSL {
-    //     let [h, s, l] = hsl;
-    //     h = (h + offset) % 360;
-    //     return [h, s, l];
-    // }
 
     /**
      * Gets the RGB value of a known color
@@ -344,6 +318,120 @@ namespace neopixel {
     //% blockId="neopixel_colors" block="%color"
     export function colors(color: NeoPixelColors): number {
         return color;
+    }
+
+    function packRGB(a: number, b: number, c: number): number {
+        return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
+    }
+    function unpackR(rgb: number): number {   
+        let r = (rgb >> 16) & 0xFF;
+        return r;
+    }
+    function unpackG(rgb: number): number {   
+        let g = (rgb >> 8) & 0xFF;
+        return g;
+    }
+    function unpackB(rgb: number): number {   
+        let b = (rgb) & 0xFF;
+        return b;
+    }
+    function abs(n: number): number {
+        return n < 0 ? -n : n;
+    }
+    function round(n: number): number {
+        let r = n % 1;
+        return n - r;
+    }
+    function min(a: number, b: number, c: number) {
+        let m = a;
+        m = b < m ? b : m;
+        m = c < m ? c : m;
+        return m;
+    }
+    function max(a: number, b: number, c: number) {
+        let m = a;
+        m = b > m ? b : m;
+        m = c > m ? c : m;
+        return m;
+    }
+
+    /**
+     * A HSL (hue, saturation, luminosity) format color
+     */
+    export class HSL {
+        h: number;
+        s: number;
+        l: number;
+        constructor(h: number, s: number, l: number) {
+            this.h = h;
+            this.s = s;
+            this.l = l;
+        }
+
+        /**
+         * Shifts the hue of a HSL color
+         * @param hsl the HSL (hue, saturation, lightness) color
+         * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
+         */
+        //% weight=1
+        //% blockId="neopixel_rotate_hue" block="shift %hsl| hue by %offset"
+        rotateHue(offset: number): void {
+            this.h = (this.h + offset) % 360;
+        }
+
+        /**
+         * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
+         * green, blue) format color. Input ranges h between [0,260], s between 
+         * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
+        */
+        //% weight=2 blockGap=8
+        //% blockId="neopixel_hsl_to_rgb" block="%hsl| to RGB"
+        toRGB(): number{
+            //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+            let h = this.h;
+            let s = this.s;
+            let l = this.l;
+            let s$ = s / 100;
+            let l$ = l / 100;
+            let c = (1 - abs(2*l$ - 1))*s$
+            let h$ = h/60;
+            let x = c*(1 - abs(h$ % 2  - 1))
+            let r$: number;
+            let g$: number;
+            let b$: number;
+            if (0 <= h$ && h$ < 1) {
+                r$ = c; g$ = x; b$ = 0;
+            } else if (1 <= h$ && h$ < 2) {
+                r$ = x; g$ = c; b$ = 0;
+            } else if (2 <= h$ && h$ < 3) {
+                r$ = 0; g$ = c; b$ = x;
+            } else if (3 <= h$ && h$ < 4) {
+                r$ = 0; g$ = x; b$ = c;
+            } else if (4 <= h$ && h$ < 5) {
+                r$ = x; g$ = 0; b$ = c;
+            } else if (5 <= h$ && h$ < 6) {
+                r$ = c; g$ = 0; b$ = x;
+            } else {
+                r$ = 0; g$ = 0; b$ = 0;
+            }
+            let m = l$ - 0.5*c;
+            let r = round((r$+m)*255);
+            let g = round((g$+m)*255);
+            let b = round((b$+m)*255);
+            return packRGB(r,g,b);
+        }
+    }
+
+    /**
+     * Creates a HSL (hue, saturation, luminosity) color
+     * @param hue value of the hue channel between 0 and 360. eg: 360
+     * @param sat value of the saturation channel between 0 and 100. eg: 100
+     * @param lum value of the luminosity channel between 0 and 100. eg: 100
+     */
+    //% weight=1
+    //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
+    export function hsl(hue: number, sat: number, lum: number): HSL {
+        return new HSL(hue, sat, lum);
     }
 
     // /**
@@ -355,10 +443,12 @@ namespace neopixel {
     // //% blockId="neopixel_rgb_to_hsl" block="convert RGB %rgb to HSL format"
     // export function rgbToHSL(rgb: number): HSL {
     //     //reference: https://en.wikipedia.org/wiki/HSL_and_HSV
-    //     let [r, g, b] = unpack3(rgb);
+    //     let r = unpackR(rgb);
+    //     let g = unpackG(rgb);
+    //     let b = unpackB(rgb);
     //     let [r$, g$, b$] = [r/255, g/255, b/255];
-    //     let cMin = Math.min(r$, g$, b$);
-    //     let cMax = Math.max(r$, g$, b$);
+    //     let cMin = min(r$, g$, b$);
+    //     let cMax = max(r$, g$, b$);
     //     let cDelta = cMax - cMin;
     //     let h: number, s: number, l: number;
     //     let maxAndMin = cMax + cMin;
@@ -384,55 +474,9 @@ namespace neopixel {
     //             s = 100*(cDelta / maxAndMin);
     //     }
 
-    //     h = Math.round(h);
-    //     s = Math.round(s);
-    //     l = Math.round(l);
-    //     return [h,s,l];
+    //     h = round(h);
+    //     s = round(s);
+    //     l = round(l);
+    //     return new HSL(h, s, l);
     // }
-
-    // /**
-    //  * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
-    //  * green, blue) format color. Input ranges h between [0,260], s between 
-    //  * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
-    // */
-    // //% weight=2 blockGap=8
-    // //% blockId="neopixel_hsl_to_rgb" block="convert HSL %hsl to RGB format"
-    // export function hslToRGB(hsl: HSL): number{
-    //     //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
-    //     let [h,s,l] = hsl;
-    //     let [s$, l$] = [s / 100, l / 100];
-    //     let c = (1 - Math.abs(2*l$ - 1))*s$
-    //     let h$ = h/60;
-    //     let x = c*(1 - Math.abs(h$ % 2  - 1))
-    //     let rgb$: [number, number, number];
-    //     if (0 <= h$ && h$ < 1)
-    //         rgb$ = [c,x,0]
-    //     else if (1 <= h$ && h$ < 2)
-    //         rgb$ = [x,c,0]
-    //     else if (2 <= h$ && h$ < 3)
-    //         rgb$ = [0,c,x]
-    //     else if (3 <= h$ && h$ < 4)
-    //         rgb$ = [0,x,c]
-    //     else if (4 <= h$ && h$ < 5)
-    //         rgb$ = [x,0,c]
-    //     else if (5 <= h$ && h$ < 6)
-    //         rgb$ = [c,0,x]
-    //     else
-    //         rgb$ = [0,0,0]
-    //     let [r$,g$,b$] = rgb$;
-    //     let m = l - 0.5*c;
-    //     let [r,g,b] = [Math.round((r$+m)*255),Math.round((g$+m)*255),(Math.round(b$+m)*255)]
-    //     return pack3(r,g,b);
-    // }
-
-
-    function pack3(a: number, b: number, c: number): number {
-        return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
-    }
-    function unpack3(abc: number): [number, number, number] {   
-        let a = (abc >> 16) & 0xFF;
-        let b = (abc >> 8) & 0xFF;
-        let c = (abc) & 0xFF;
-        return [a,b,c];
-    }
 }
