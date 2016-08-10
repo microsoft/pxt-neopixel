@@ -106,7 +106,7 @@ namespace neopixel {
          * @param pixeloffset position of the LED in the strip
          * @param white brightness of the white LED
          */
-        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel color at %pixeloffset|to %rgbw=0" 
+        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel color at %pixeloffset|to %white" 
         //% blockGap=8
         //% weight=80
         setPixelWhiteLED(pixeloffset: number, white: number): void {
@@ -331,7 +331,7 @@ namespace neopixel {
     //  */
     // //% weight=1
     // //% blockId="neopixel_rotate_hue" block="shift HSL color %hsl|by %offset"
-    // export function rotateHue(hsl: HSL, offset: number = 10): HSL {
+    // export function rotateHue(hsl: HSL, offset: number): HSL {
     //     let [h, s, l] = hsl;
     //     h = (h + offset) % 360;
     //     return [h, s, l];
