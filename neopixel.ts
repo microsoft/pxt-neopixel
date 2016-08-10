@@ -20,6 +20,8 @@ export enum NeoPixelMode {
     RGBW
 }
 
+export type HSL = [number, number, number];
+
 /**
  * Functions to operate NeoPixel strips.
  */
@@ -48,63 +50,8 @@ namespace neopixel {
         //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
         //% weight=85 blockGap=8
         showColor(rgb: number) {
-            if (this._mode == NeoPixelMode.RGB) {
-                this.setAllRGB(rgb);
-            } else {
-                let rgbw = rgbToRGBW(rgb);
-                this.setAllRGBW(rgbw);
-            }
+            this.setAllRGB(rgb);
             this.show();
-        }
-
-        /**
-         * Shows all LEDs to a given color (range 0-255 for r, g, b, w). 
-         * @param color RGBW color of the LED
-         */
-        //% blockId="neopixel_set_strip_rgbw" block="%strip|show color %rgbw" 
-        //% weight=85 blockGap=8
-        showRGBW(rgbw: number) {
-            this.setAllRGBW(rgbw);
-            this.show();
-        }
-
-        private setAllRGB(rgb: number) {
-            let [red,green,blue] = unpack3(rgb);
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
-            let buf = this.buf;
-            let end = this.start + this._length;
-            for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * 3;
-                buf[ledoffset + 0] = green;
-                buf[ledoffset + 1] = red;
-                buf[ledoffset + 2] = blue;
-            }
-        }
-        private setAllRGBW(rgbw: number) {
-            let [red, green, blue, white] = unpack4(rgbw);
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            let end = this.start + this._length;
-            for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * 4;
-                buf[ledoffset + 0] = green;
-                buf[ledoffset + 1] = red;
-                buf[ledoffset + 2] = blue;
-                buf[ledoffset + 3] = white;
-            }
         }
 
         /**
@@ -144,72 +91,28 @@ namespace neopixel {
         /**
          * Set LED to a given color (range 0-255 for r, g, b). 
          * You need to call ``show`` to make the changes visible.
-         * @param ledoffset position of the LED in the strip
+         * @param pixeloffset position of the NeoPixel in the strip
          * @param color RGB color of the LED
          */
-        //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %ledoff|to %color=neopixel_colors" 
+        //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %pixeloffset|to %rgb=neopixel_colors" 
         //% blockGap=8
         //% weight=80
-        setPixelColor(ledoffset: number, rgb: number): void {
-            if (this._mode == NeoPixelMode.RGB) {
-                this.setPixelRGB(ledoffset, rgb);
-            } else {
-                let rgbw = rgbToRGBW(rgb);
-                this.setPixelRGBW(ledoffset, rgbw);
-            }
-        }
-
-        private setPixelRGB(ledoffset: number, rgb: number): void {
-            if (ledoffset < 0
-                || ledoffset >= this._length)
-                return;
-
-            ledoffset = (ledoffset + this.start) * 3;
-
-            let [red,green,blue] = unpack3(rgb);
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
-            let buf = this.buf;
-            buf[ledoffset + 0] = green;
-            buf[ledoffset + 1] = red;
-            buf[ledoffset + 2] = blue;
+        setPixelColor(pixeloffset: number, rgb: number): void {
+            this.setPixelRGB(pixeloffset, rgb);
         }
 
         /**
-         * Set LED to a given color and whiteness (range 0-255 for r, g, b, w). 
-         * You need to call ``show`` to make the changes visible.
-         * @param ledoffset position of the LED in the strip
-         * @param color RGBW color of the LED
+         * For NeoPixels with RGB+W LEDs, set the white LED brightness. This only works for RGB+W NeoPixels.
+         * @param pixeloffset position of the LED in the strip
+         * @param brightness of the white LED
          */
-        //% blockId="neopixel_set_pixel_rgbw" block="%strip|set pixel color at %ledoff|to %rgbw=0" 
+        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel color at %pixeloffset|to %rgbw=0" 
         //% blockGap=8
         //% weight=80
-        setPixelRGBW(ledoffset: number, rgbw: number): void {
-            if (ledoffset < 0
-                || ledoffset >= this._length)
-                return;
-
-            ledoffset = (ledoffset + this.start) * 4;
-
-            let [red,green,blue,white] = unpack4(rgbw);
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            buf[ledoffset + 0] = green;
-            buf[ledoffset + 1] = red;
-            buf[ledoffset + 2] = blue;
-            buf[ledoffset + 3] = white;
+        setPixelWhiteLED(pixeloffset: number, white: number): void {
+            if (this._mode === NeoPixelMode.RGBW) {
+                this.setPixelW(pixeloffset, white);
+            }    
         }
 
         /**
@@ -300,6 +203,80 @@ namespace neopixel {
             pins.digitalWritePin(this.pin, 0)
             basic.pause(50)
         }
+
+        private setAllRGB(rgb: number) {
+            let [red, green, blue] = unpack3(rgb);
+            
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+
+            let br = this.brightness;
+            if (br < 255) {
+                red = (red * br) >> 8;
+                green = (green * br) >> 8;
+                blue = (blue * br) >> 8;
+            }
+            let buf = this.buf;
+            let end = this.start + this._length;
+            for (let i = this.start; i < end; ++i) {
+                let ledoffset = i * stride;
+                buf[ledoffset + 0] = green;
+                buf[ledoffset + 1] = red;
+                buf[ledoffset + 2] = blue;
+            }
+        }
+        private setAllW(white: number) {
+            if (this._mode !== NeoPixelMode.RGBW)
+                return;
+            
+            let br = this.brightness;
+            if (br < 255) {
+                white = (white * br) >> 8;
+            }
+            let buf = this.buf;
+            let end = this.start + this._length;
+            for (let i = this.start; i < end; ++i) {
+                let ledoffset = i * 4;
+                buf[ledoffset + 3] = white;
+            }
+        }
+        private setPixelRGB(pixeloffset: number, rgb: number): void {
+            if (pixeloffset < 0
+                || pixeloffset >= this._length)
+                return;
+
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            pixeloffset = (pixeloffset + this.start) * stride;
+
+            let [red,green,blue] = unpack3(rgb);
+
+            let br = this.brightness;
+            if (br < 255) {
+                red = (red * br) >> 8;
+                green = (green * br) >> 8;
+                blue = (blue * br) >> 8;
+            }
+            let buf = this.buf;
+            buf[pixeloffset + 0] = green;
+            buf[pixeloffset + 1] = red;
+            buf[pixeloffset + 2] = blue;
+        }
+        private setPixelW(pixeloffset: number, white: number): void {
+            if (this._mode !== NeoPixelMode.RGBW)
+                return;
+            
+            if (pixeloffset < 0
+                || pixeloffset >= this._length)
+                return;
+
+            pixeloffset = (pixeloffset + this.start) * 4;
+
+            let br = this.brightness;
+            if (br < 255) {
+                white = (white * br) >> 8;
+            }
+            let buf = this.buf;
+            buf[pixeloffset + 3] = white;
+        }
     }
 
     /**
@@ -333,30 +310,17 @@ namespace neopixel {
         return pack3(red,green,blue);
     }
 
-    /**
-     * Converts red, green, blue, and white channels into a RGBW color
-     * @param red value of the red channel between 0 and 255. eg: 255
-     * @param green value of the green channel between 0 and 255. eg: 255
-     * @param blue value of the blue channel between 0 and 255. eg: 255
-     * @param white value of the white channel between 0 and 255. eg: 255
-     */
-    //% weight=1
-    //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue|white %white"
-    export function rgbw(red: number, green: number, blue: number, white: number): number {
-        return pack4(red,green,blue,white);
-    }
-
 
     /**
-     * Converts hue, saturation, luminosity channels into a RGB color
+     * Creates a HSL (hue, saturation, luminosity) color
      * @param hue value of the hue channel between 0 and 360. eg: 360
      * @param sat value of the saturation channel between 0 and 100. eg: 100
      * @param lum value of the luminosity channel between 0 and 100. eg: 100
      */
     //% weight=1
     //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
-    export function hsl(hue: number, sat: number, lum: number): number {
-        return hslToRgb(hue, sat, lum);
+    export function hsl(hue: number, sat: number, lum: number): HSL {
+        return [hue, sat, lum]
     }
 
     /**
@@ -368,79 +332,6 @@ namespace neopixel {
         return color;
     }
 
-
-    function rgbToRGBW(rgb: number) {
-        let [r,g,b] = unpack3(rgb);
-        let w = 0;
-        return pack4(r,g,b,w);
-    }
-    function rgbwToRGB(rgbw: number) {
-        let [r,g,b,w] = unpack4(rgbw);
-        return pack3(r,g,b);
-    }
-
-    function pack2(a: number, b: number): number {
-        return ((a & 0xFF) << 8) | (b & 0xFF);
-    }
-    function unpack2(ab: number): [number, number] {   
-        let a = (ab >> 8) & 0xFF;
-        let b = (ab) & 0xFF;
-        return [a,b];
-    }
-    function pack3(a: number, b: number, c: number): number {
-        return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
-    }
-    function unpack3(abc: number): [number, number, number] {   
-        let a = (abc >> 16) & 0xFF;
-        let b = (abc >> 8) & 0xFF;
-        let c = (abc) & 0xFF;
-        return [a,b,c];
-    }
-    function pack4(a: number, b: number, c: number, d: number): number {
-        return ((a & 0xFF) << 24) | ((b & 0xFF) << 16) | ((c & 0xFF) << 8) | d;
-    }
-    function unpack4(abcd: number): [number, number, number, number] {  
-        let a = (abcd >> 24) & 0xFF; 
-        let b = (abcd >> 16) & 0xFF;
-        let c = (abcd >> 8) & 0xFF;
-        let d = (abcd) & 0xFF;
-        return [a,b,c,d];
-    }
-    function pack5(a: number, b: number, c: number, d: number, e: number): number {
-        return ((a & 0xFF) << 32) 
-            | ((b & 0xFF) << 24) 
-            | ((c & 0xFF) << 16) 
-            | ((d & 0xFF) << 8) 
-            | e;
-    }
-    function unpack5(abcde: number): [number, number, number, number, number] {  
-        let a = (abcde >> 32) & 0xFF; 
-        let b = (abcde >> 24) & 0xFF; 
-        let c = (abcde >> 16) & 0xFF;
-        let d = (abcde >> 8) & 0xFF;
-        let e = (abcde) & 0xFF;
-        return [a,b,c,d,e];
-    }
-
-    function packHSL(h: number, s: number, l: number): number {
-        let [h1, h2] = unpack2(h);
-        return pack4(h1,h2,s,l);
-    }
-    function unpackHSL(hsl: number): [number, number, number] {  
-        let [h1, h2, s, l] = unpack4(hsl);
-        let h = pack2(h1,h2);
-        return [h,s,l];
-    }
-    function packHSLW(h: number, s: number, l: number, w: number): number {
-        let [h1, h2] = unpack2(h);
-        return pack5(h1,h2,s,l,w);
-    }
-    function unpackHSLW(hslw: number): [number, number, number, number] {  
-        let [h1, h2, s, l, w] = unpack5(hslw);
-        let h = pack2(h1,h2);
-        return [h,s,l,w];
-    }
-
     /**
      * Converts from an RGB (red, green, blue) format color to an HSL (hue, 
      * saturation, luminosity) format color. Input r, g, b ranges between [0,255], 
@@ -448,7 +339,7 @@ namespace neopixel {
     */
     //% weight=2 blockGap=8
     //% blockId="neopixel_rgb_to_hsl" block="%rgb"
-    export function rgbToHsl(rgb: number): number {
+    export function rgbToHSL(rgb: number): HSL {
         //reference: https://en.wikipedia.org/wiki/HSL_and_HSV
         let [r, g, b] = unpack3(rgb);
         let [r$, g$, b$] = [r/255, g/255, b/255];
@@ -482,7 +373,7 @@ namespace neopixel {
         h = Math.round(h);
         s = Math.round(s);
         l = Math.round(l);
-        return packHSL(h,s,l);
+        return [h,s,l];
     }
 
     /**
@@ -492,9 +383,9 @@ namespace neopixel {
     */
     //% weight=2 blockGap=8
     //% blockId="neopixel_rgb_to_hsl" block="%rgb"
-    export function hslToRgb(hsl: number): number{
+    export function hslToRGB(hsl: HSL): number{
         //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
-        let [h,s,l] = unpackHSL(hsl);
+        let [h,s,l] = hsl;
         let [s$, l$] = [s / 100, l / 100];
         let c = (1 - Math.abs(2*l$ - 1))*s$
         let h$ = h/60;
@@ -518,5 +409,16 @@ namespace neopixel {
         let m = l - 0.5*c;
         let [r,g,b] = [Math.round((r$+m)*255),Math.round((g$+m)*255),(Math.round(b$+m)*255)]
         return pack3(r,g,b);
+    }
+
+
+    function pack3(a: number, b: number, c: number): number {
+        return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
+    }
+    function unpack3(abc: number): [number, number, number] {   
+        let a = (abc >> 16) & 0xFF;
+        let b = (abc >> 8) & 0xFF;
+        let c = (abc) & 0xFF;
+        return [a,b,c];
     }
 }
