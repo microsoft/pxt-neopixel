@@ -1,4 +1,4 @@
-let strip = neopixel.create(DigitalPin.P0, 24);
+let strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB);
 
 strip.showColor(NeoPixelColors.Red)
 basic.pause(2000)
