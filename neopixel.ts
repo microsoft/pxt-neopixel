@@ -395,7 +395,7 @@ namespace neopixel {
      * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
     */
     //% weight=2 blockGap=8
-    //% blockId="neopixel_rgb_to_hsl" block="%rgb"
+    //% blockId="neopixel_hsl_to_rgb" block="%rgb"
     export function hslToRGB(hsl: HSL): number{
         //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
         let [h,s,l] = hsl;
