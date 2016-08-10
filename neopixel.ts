@@ -45,7 +45,7 @@ namespace neopixel {
 
         /**
          * Shows all LEDs to a given color (range 0-255 for r, g, b). 
-         * @param color RGB color of the LED
+         * @param rgb RGB color of the LED
          */
         //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
         //% weight=85 blockGap=8
@@ -92,7 +92,7 @@ namespace neopixel {
          * Set LED to a given color (range 0-255 for r, g, b). 
          * You need to call ``show`` to make the changes visible.
          * @param pixeloffset position of the NeoPixel in the strip
-         * @param color RGB color of the LED
+         * @param rgb RGB color of the LED
          */
         //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %pixeloffset|to %rgb=neopixel_colors" 
         //% blockGap=8
@@ -104,7 +104,7 @@ namespace neopixel {
         /**
          * For NeoPixels with RGB+W LEDs, set the white LED brightness. This only works for RGB+W NeoPixels.
          * @param pixeloffset position of the LED in the strip
-         * @param brightness of the white LED
+         * @param white brightness of the white LED
          */
         //% blockId="neopixel_set_pixel_white" block="%strip|set pixel color at %pixeloffset|to %rgbw=0" 
         //% blockGap=8
