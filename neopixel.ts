@@ -16,11 +16,11 @@ enum NeoPixelColors {
  * Different modes for RGB or RGB+W NeoPixel strips
  */
 enum NeoPixelMode {
-    RGB,
-    RGBW
+    RGB = 0,
+    RGBW = 1
 }
 
-type HSL = [number, number, number];
+//type HSL = [number, number, number];
 
 /**
  * Functions to operate NeoPixel strips.
@@ -311,30 +311,30 @@ namespace neopixel {
     }
 
 
-    /**
-     * Creates a HSL (hue, saturation, luminosity) color
-     * @param hue value of the hue channel between 0 and 360. eg: 360
-     * @param sat value of the saturation channel between 0 and 100. eg: 100
-     * @param lum value of the luminosity channel between 0 and 100. eg: 100
-     */
-    //% weight=1
-    //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
-    export function hsl(hue: number, sat: number, lum: number): HSL {
-        return [hue, sat, lum]
-    }
+    // /**
+    //  * Creates a HSL (hue, saturation, luminosity) color
+    //  * @param hue value of the hue channel between 0 and 360. eg: 360
+    //  * @param sat value of the saturation channel between 0 and 100. eg: 100
+    //  * @param lum value of the luminosity channel between 0 and 100. eg: 100
+    //  */
+    // //% weight=1
+    // //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
+    // export function hsl(hue: number, sat: number, lum: number): HSL {
+    //     return [hue, sat, lum]
+    // }
 
-     /**
-     * Shifts the hue of a HSL color
-     * @param hsl the HSL (hue, saturation, lightness) color
-     * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
-     */
-    //% weight=1
-    //% blockId="neopixel_rotate_hue" block="shift HSL color %hsl|by %offset"
-    export function rotateHue(hsl: HSL, offset: number = 10): HSL {
-        let [h, s, l] = hsl;
-        h = (h + offset) % 360;
-        return [h, s, l];
-    }
+    //  /**
+    //  * Shifts the hue of a HSL color
+    //  * @param hsl the HSL (hue, saturation, lightness) color
+    //  * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
+    //  */
+    // //% weight=1
+    // //% blockId="neopixel_rotate_hue" block="shift HSL color %hsl|by %offset"
+    // export function rotateHue(hsl: HSL, offset: number = 10): HSL {
+    //     let [h, s, l] = hsl;
+    //     h = (h + offset) % 360;
+    //     return [h, s, l];
+    // }
 
     /**
      * Gets the RGB value of a known color
@@ -345,84 +345,84 @@ namespace neopixel {
         return color;
     }
 
-    /**
-     * Converts from an RGB (red, green, blue) format color to an HSL (hue, 
-     * saturation, luminosity) format color. Input r, g, b ranges between [0,255], 
-     * and output ranges h between [0,260], s between [0, 100], and l between [0, 100]
-    */
-    //% weight=2 blockGap=8
-    //% blockId="neopixel_rgb_to_hsl" block="%rgb"
-    export function rgbToHSL(rgb: number): HSL {
-        //reference: https://en.wikipedia.org/wiki/HSL_and_HSV
-        let [r, g, b] = unpack3(rgb);
-        let [r$, g$, b$] = [r/255, g/255, b/255];
-        let cMin = Math.min(r$, g$, b$);
-        let cMax = Math.max(r$, g$, b$);
-        let cDelta = cMax - cMin;
-        let h: number, s: number, l: number;
-        let maxAndMin = cMax + cMin;
+    // /**
+    //  * Converts from an RGB (red, green, blue) format color to an HSL (hue, 
+    //  * saturation, luminosity) format color. Input r, g, b ranges between [0,255], 
+    //  * and output ranges h between [0,260], s between [0, 100], and l between [0, 100]
+    // */
+    // //% weight=2 blockGap=8
+    // //% blockId="neopixel_rgb_to_hsl" block="convert RGB %rgb to HSL format"
+    // export function rgbToHSL(rgb: number): HSL {
+    //     //reference: https://en.wikipedia.org/wiki/HSL_and_HSV
+    //     let [r, g, b] = unpack3(rgb);
+    //     let [r$, g$, b$] = [r/255, g/255, b/255];
+    //     let cMin = Math.min(r$, g$, b$);
+    //     let cMax = Math.max(r$, g$, b$);
+    //     let cDelta = cMax - cMin;
+    //     let h: number, s: number, l: number;
+    //     let maxAndMin = cMax + cMin;
 
-        //lum
-        l = (maxAndMin / 2)*100
+    //     //lum
+    //     l = (maxAndMin / 2)*100
         
-        if (cDelta === 0)
-            s = h = 0;
-        else {
-            //hue
-            if (cMax === r$)
-                h = 60 * (((g$-b$)/cDelta) % 6);
-            else if (cMax === g$)
-                h = 60 * (((b$-r$)/cDelta) + 2);
-            else if (cMax === b$)
-                h = 60 * (((r$-g$)/cDelta) + 4);
+    //     if (cDelta === 0)
+    //         s = h = 0;
+    //     else {
+    //         //hue
+    //         if (cMax === r$)
+    //             h = 60 * (((g$-b$)/cDelta) % 6);
+    //         else if (cMax === g$)
+    //             h = 60 * (((b$-r$)/cDelta) + 2);
+    //         else if (cMax === b$)
+    //             h = 60 * (((r$-g$)/cDelta) + 4);
 
-            //sat
-            if (l > 50)
-                s = 100*(cDelta / (2 - maxAndMin));
-            else
-                s = 100*(cDelta / maxAndMin);
-        }
+    //         //sat
+    //         if (l > 50)
+    //             s = 100*(cDelta / (2 - maxAndMin));
+    //         else
+    //             s = 100*(cDelta / maxAndMin);
+    //     }
 
-        h = Math.round(h);
-        s = Math.round(s);
-        l = Math.round(l);
-        return [h,s,l];
-    }
+    //     h = Math.round(h);
+    //     s = Math.round(s);
+    //     l = Math.round(l);
+    //     return [h,s,l];
+    // }
 
-    /**
-     * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
-     * green, blue) format color. Input ranges h between [0,260], s between 
-     * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
-    */
-    //% weight=2 blockGap=8
-    //% blockId="neopixel_hsl_to_rgb" block="%rgb"
-    export function hslToRGB(hsl: HSL): number{
-        //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
-        let [h,s,l] = hsl;
-        let [s$, l$] = [s / 100, l / 100];
-        let c = (1 - Math.abs(2*l$ - 1))*s$
-        let h$ = h/60;
-        let x = c*(1 - Math.abs(h$ % 2  - 1))
-        let rgb$: [number, number, number];
-        if (0 <= h$ && h$ < 1)
-            rgb$ = [c,x,0]
-        else if (1 <= h$ && h$ < 2)
-            rgb$ = [x,c,0]
-        else if (2 <= h$ && h$ < 3)
-            rgb$ = [0,c,x]
-        else if (3 <= h$ && h$ < 4)
-            rgb$ = [0,x,c]
-        else if (4 <= h$ && h$ < 5)
-            rgb$ = [x,0,c]
-        else if (5 <= h$ && h$ < 6)
-            rgb$ = [c,0,x]
-        else
-            rgb$ = [0,0,0]
-        let [r$,g$,b$] = rgb$;
-        let m = l - 0.5*c;
-        let [r,g,b] = [Math.round((r$+m)*255),Math.round((g$+m)*255),(Math.round(b$+m)*255)]
-        return pack3(r,g,b);
-    }
+    // /**
+    //  * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
+    //  * green, blue) format color. Input ranges h between [0,260], s between 
+    //  * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
+    // */
+    // //% weight=2 blockGap=8
+    // //% blockId="neopixel_hsl_to_rgb" block="convert HSL %hsl to RGB format"
+    // export function hslToRGB(hsl: HSL): number{
+    //     //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+    //     let [h,s,l] = hsl;
+    //     let [s$, l$] = [s / 100, l / 100];
+    //     let c = (1 - Math.abs(2*l$ - 1))*s$
+    //     let h$ = h/60;
+    //     let x = c*(1 - Math.abs(h$ % 2  - 1))
+    //     let rgb$: [number, number, number];
+    //     if (0 <= h$ && h$ < 1)
+    //         rgb$ = [c,x,0]
+    //     else if (1 <= h$ && h$ < 2)
+    //         rgb$ = [x,c,0]
+    //     else if (2 <= h$ && h$ < 3)
+    //         rgb$ = [0,c,x]
+    //     else if (3 <= h$ && h$ < 4)
+    //         rgb$ = [0,x,c]
+    //     else if (4 <= h$ && h$ < 5)
+    //         rgb$ = [x,0,c]
+    //     else if (5 <= h$ && h$ < 6)
+    //         rgb$ = [c,0,x]
+    //     else
+    //         rgb$ = [0,0,0]
+    //     let [r$,g$,b$] = rgb$;
+    //     let m = l - 0.5*c;
+    //     let [r,g,b] = [Math.round((r$+m)*255),Math.round((g$+m)*255),(Math.round(b$+m)*255)]
+    //     return pack3(r,g,b);
+    // }
 
 
     function pack3(a: number, b: number, c: number): number {
