@@ -163,7 +163,8 @@ namespace neopixel {
             strip.buf = this.buf;
             strip.pin = this.pin;
             strip.brightness = this.brightness;
-            strip.start = this.start + Math.clamp(0, this._length - (strip.start - this.start), length);
+            strip.start = this.start + Math.clamp(0, this._length - 1, start);
+            strip._length = Math.clamp(0, this._length - (strip.start - this.start), length);
             return strip;
         }
 
