@@ -284,10 +284,11 @@ namespace neopixel {
      * @param pin the pin where the neopixel is connected.
      * @param numleds number of leds in the strip, eg: 24,30,60,64
      */
-    //% blockId="neopixel_create" block="NeoPixel|at pin %pin|with %numleds|leds of type %mode=NeoPixelMode.RGB"
+    //% blockId="neopixel_create" block="NeoPixel|at pin %pin|with %numleds|leds"
     //% weight=90 blockGap=8
-    export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
+    export function create(pin: DigitalPin, numleds: number): Strip {
         let strip = new Strip();
+        let mode = NeoPixelMode.RGB;//TODO:  of type %mode=NeoPixelMode.RGB
         let stride = mode === NeoPixelMode.RGB ? 3 : 4;
         strip.buf = pins.createBuffer(numleds * stride);
         strip.setBrigthness(255)
