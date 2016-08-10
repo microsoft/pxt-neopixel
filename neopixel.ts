@@ -205,7 +205,7 @@ namespace neopixel {
         }
 
         private setAllRGB(rgb: number) {
-            let [red, green, blue] = unpack3(rgb);
+            let [red, green, blue]: [number, number, number] = unpack3(rgb);
             
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
 
@@ -247,7 +247,7 @@ namespace neopixel {
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             pixeloffset = (pixeloffset + this.start) * stride;
 
-            let [red,green,blue] = unpack3(rgb);
+            let [red,green,blue]: [number, number, number] = unpack3(rgb);
 
             let br = this.brightness;
             if (br < 255) {
