@@ -391,33 +391,31 @@ namespace neopixel {
             let h = this.h;
             let s = this.s;
             let l = this.l;
-            let s$ = s / 100;
-            let l$ = l / 100;
-            let c = (1 - abs(2*l$ - 1))*s$
-            let h$ = h/60;
-            let x = c*(1 - abs(h$ % 2  - 1))
+            let c = ((100 - abs(2*l - 100))*s)*255/10000; //chroma, [0,255]
+            let h1 = h/60;//[0,6]
+            let h2 = (h - h1*60)*255/60;//[0,255]
+            let temp = Math.abs(((h1 % 2) * 255 + h2) - 255);
+            let x = c * (255 - (temp)) / 255;//[0,255], second largest component of this color
             let r$: number;
             let g$: number;
             let b$: number;
-            if (0 <= h$ && h$ < 1) {
+            if (h1 == 0) {
                 r$ = c; g$ = x; b$ = 0;
-            } else if (1 <= h$ && h$ < 2) {
+            } else if (h1 == 1) {
                 r$ = x; g$ = c; b$ = 0;
-            } else if (2 <= h$ && h$ < 3) {
+            } else if (h1 == 2) {
                 r$ = 0; g$ = c; b$ = x;
-            } else if (3 <= h$ && h$ < 4) {
+            } else if (h1 == 3) {
                 r$ = 0; g$ = x; b$ = c;
-            } else if (4 <= h$ && h$ < 5) {
+            } else if (h1 == 4) {
                 r$ = x; g$ = 0; b$ = c;
-            } else if (5 <= h$ && h$ < 6) {
+            } else if (h1 == 5) {
                 r$ = c; g$ = 0; b$ = x;
-            } else {
-                r$ = 0; g$ = 0; b$ = 0;
             }
-            let m = l$ - 0.5*c;
-            let r = round((r$+m)*255);
-            let g = round((g$+m)*255);
-            let b = round((b$+m)*255);
+            let m = (l*510/100 - c)/2;
+            let r = r$+m;
+            let g = g$+m;
+            let b = b$+m;
             return packRGB(r,g,b);
         }
     }
