@@ -66,7 +66,7 @@ namespace neopixel {
                 return;
             }
 
-            value = abs(value);
+            value = Math.abs(value);
             const n = this._length;
             const n1 = n - 1;
             let v = (value * n) / high;
@@ -335,25 +335,6 @@ namespace neopixel {
         let b = (rgb) & 0xFF;
         return b;
     }
-    function abs(n: number): number {
-        return n < 0 ? -n : n;
-    }
-    function round(n: number): number {
-        let r = n % 1;
-        return n - r;
-    }
-    function min(a: number, b: number, c: number) {
-        let m = a;
-        m = b < m ? b : m;
-        m = c < m ? c : m;
-        return m;
-    }
-    function max(a: number, b: number, c: number) {
-        let m = a;
-        m = b > m ? b : m;
-        m = c > m ? c : m;
-        return m;
-    }
 
     /**
      * A HSL (hue, saturation, luminosity) format color
@@ -363,9 +344,9 @@ namespace neopixel {
         s: number;
         l: number;
         constructor(h: number, s: number, l: number) {
-            this.h = h;
-            this.s = s;
-            this.l = l;
+            this.h = h % 360;
+            this.s = Math.clamp(0, 99, s);
+            this.l = Math.clamp(0, 99, l);
         }
 
         /**
@@ -391,11 +372,11 @@ namespace neopixel {
             let h = this.h;
             let s = this.s;
             let l = this.l;
-            let c = ((100 - abs(2*l - 100))*s)*255/10000; //chroma, [0,255]
+            let c = ((100 - Math.abs(2*l - 100))*s)*256/10000; //chroma, [0,256]
             let h1 = h/60;//[0,6]
-            let h2 = (h - h1*60)*255/60;//[0,255]
-            let temp = Math.abs(((h1 % 2) * 255 + h2) - 255);
-            let x = c * (255 - (temp)) / 255;//[0,255], second largest component of this color
+            let h2 = (h - h1*60)*256/60;//[0,256]
+            let temp = Math.abs(((h1 % 2)*256 + h2) - 256);
+            let x = c * (256 - (temp)) / 256;//[0,256], second largest component of this color
             let r$: number;
             let g$: number;
             let b$: number;
@@ -412,7 +393,7 @@ namespace neopixel {
             } else if (h1 == 5) {
                 r$ = c; g$ = 0; b$ = x;
             }
-            let m = (l*510/100 - c)/2;
+            let m = (l*512/100 - c)/2;
             let r = r$+m;
             let g = g$+m;
             let b = b$+m;
