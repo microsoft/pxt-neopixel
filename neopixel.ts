@@ -323,6 +323,19 @@ namespace neopixel {
         return [hue, sat, lum]
     }
 
+     /**
+     * Shifts the hue of a HSL color
+     * @param hsl the HSL (hue, saturation, lightness) color
+     * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
+     */
+    //% weight=1
+    //% blockId="neopixel_rotate_hue" block="shift HSL color %hsl|by %offset"
+    export function rotateHue(hsl: HSL, offset: number = 10): HSL {
+        let [h, s, l] = hsl;
+        h = (h + offset) % 360;
+        return [h, s, l];
+    }
+
     /**
      * Gets the RGB value of a known color
     */
