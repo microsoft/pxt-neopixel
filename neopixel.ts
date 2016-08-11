@@ -13,11 +13,18 @@ enum NeoPixelColors {
 }
 
 /**
+ * Different modes for RGB or RGB+W NeoPixel strips
+ */
+enum NeoPixelMode {
+    RGB = 0,
+    RGBW = 1
+}
+
+/**
  * Functions to operate NeoPixel strips.
  */
 //% weight=5 color=#2699BF
 namespace neopixel {
-
     //% shim=sendBufferAsm
     function sendBuffer(buf: Buffer, pin: DigitalPin) {
     }
@@ -32,32 +39,16 @@ namespace neopixel {
         brightness: number;
         start: number; // start offset in LED strip
         _length: number; // number of LEDs
+        _mode: NeoPixelMode;
 
         /**
          * Shows all LEDs to a given color (range 0-255 for r, g, b). 
-         * @param color RGB color of the LED
+         * @param rgb RGB color of the LED
          */
         //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
         //% weight=85 blockGap=8
         showColor(rgb: number) {
-            let red = (rgb >> 16) & 0x0ff;
-            let green = (rgb >> 8) & 0x0ff;
-            let blue = (rgb) & 0x0ff;
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
-            let buf = this.buf;
-            let end = this.start + this._length;
-            for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * 3;
-                buf[ledoffset + 0] = green;
-                buf[ledoffset + 1] = red;
-                buf[ledoffset + 2] = blue;
-            }
+            this.setAllRGB(rgb);
             this.show();
         }
 
@@ -98,33 +89,28 @@ namespace neopixel {
         /**
          * Set LED to a given color (range 0-255 for r, g, b). 
          * You need to call ``show`` to make the changes visible.
-         * @param ledoffset position of the LED in the strip
-         * @param color RGB color of the LED
+         * @param pixeloffset position of the NeoPixel in the strip
+         * @param rgb RGB color of the LED
          */
-        //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %ledoff|to %color=neopixel_colors" 
+        //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %pixeloffset|to %rgb=neopixel_colors" 
         //% blockGap=8
         //% weight=80
-        setPixelColor(ledoffset: number, color: number): void {
-            if (ledoffset < 0
-                || ledoffset >= this._length)
-                return;
+        setPixelColor(pixeloffset: number, rgb: number): void {
+            this.setPixelRGB(pixeloffset, rgb);
+        }
 
-            ledoffset = (ledoffset + this.start) * 3;
-
-            let red = (color >> 16) & 0x0ff;
-            let green = (color >> 8) & 0x0ff;
-            let blue = (color) & 0x0ff;
-
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
-            let buf = this.buf;
-            buf[ledoffset + 0] = green;
-            buf[ledoffset + 1] = red;
-            buf[ledoffset + 2] = blue;
+        /**
+         * For NeoPixels with RGB+W LEDs, set the white LED brightness. This only works for RGB+W NeoPixels.
+         * @param pixeloffset position of the LED in the strip
+         * @param white brightness of the white LED
+         */
+        //% blockId="neopixel_set_pixel_white" block="%strip|set pixel white LED at %pixeloffset|to %white" 
+        //% blockGap=8
+        //% weight=80
+        setPixelWhiteLED(pixeloffset: number, white: number): void {
+            if (this._mode === NeoPixelMode.RGBW) {
+                this.setPixelW(pixeloffset, white);
+            }    
         }
 
         /**
@@ -190,7 +176,8 @@ namespace neopixel {
         //% blockId="neopixel_shift" block="%strip|shift pixels by %offset" blockGap=8
         //% weight=40
         shift(offset: number = 1): void {
-            this.buf.shift(-offset * 3, this.start * 3, this._length * 3)
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            this.buf.shift(-offset * stride, this.start * stride, this._length * stride)
         }
 
         /**
@@ -201,7 +188,8 @@ namespace neopixel {
         //% blockId="neopixel_rotate" block="%strip|rotate pixels by %offset" blockGap=8
         //% weight=39
         rotate(offset: number = 1): void {
-            this.buf.rotate(-offset * 3, this.start * 3, this._length * 3)
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
         }
 
         /**
@@ -213,6 +201,84 @@ namespace neopixel {
             pins.digitalWritePin(this.pin, 0)
             basic.pause(50)
         }
+
+        private setAllRGB(rgb: number) {
+            let red = unpackR(rgb);
+            let green = unpackG(rgb);
+            let blue = unpackB(rgb);
+            
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+
+            let br = this.brightness;
+            if (br < 255) {
+                red = (red * br) >> 8;
+                green = (green * br) >> 8;
+                blue = (blue * br) >> 8;
+            }
+            let buf = this.buf;
+            let end = this.start + this._length;
+            for (let i = this.start; i < end; ++i) {
+                let ledoffset = i * stride;
+                buf[ledoffset + 0] = green;
+                buf[ledoffset + 1] = red;
+                buf[ledoffset + 2] = blue;
+            }
+        }
+        private setAllW(white: number) {
+            if (this._mode !== NeoPixelMode.RGBW)
+                return;
+            
+            let br = this.brightness;
+            if (br < 255) {
+                white = (white * br) >> 8;
+            }
+            let buf = this.buf;
+            let end = this.start + this._length;
+            for (let i = this.start; i < end; ++i) {
+                let ledoffset = i * 4;
+                buf[ledoffset + 3] = white;
+            }
+        }
+        private setPixelRGB(pixeloffset: number, rgb: number): void {
+            if (pixeloffset < 0
+                || pixeloffset >= this._length)
+                return;
+
+            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            pixeloffset = (pixeloffset + this.start) * stride;
+
+            let red = unpackR(rgb);
+            let green = unpackG(rgb);
+            let blue = unpackB(rgb);
+
+            let br = this.brightness;
+            if (br < 255) {
+                red = (red * br) >> 8;
+                green = (green * br) >> 8;
+                blue = (blue * br) >> 8;
+            }
+            let buf = this.buf;
+            buf[pixeloffset + 0] = green;
+            buf[pixeloffset + 1] = red;
+            buf[pixeloffset + 2] = blue;
+        }
+        private setPixelW(pixeloffset: number, white: number): void {
+            if (this._mode !== NeoPixelMode.RGBW)
+                return;
+            
+            if (pixeloffset < 0
+                || pixeloffset >= this._length)
+                return;
+
+            pixeloffset = (pixeloffset + this.start) * 4;
+
+            let br = this.brightness;
+            if (br < 255) {
+                white = (white * br) >> 8;
+            }
+            let buf = this.buf;
+            buf[pixeloffset + 3] = white;
+        }
     }
 
     /**
@@ -220,15 +286,17 @@ namespace neopixel {
      * @param pin the pin where the neopixel is connected.
      * @param numleds number of leds in the strip, eg: 24,30,60,64
      */
-    //% blockId="neopixel_create" block="neopixel|at pin %pin|with %numleds|leds"
+    //% blockId="neopixel_create" block="%mode=NeoPixelMode.RGB|NeoPixel strip|at pin %pin|with %numleds|leds "
     //% weight=90 blockGap=8
-    export function create(pin: DigitalPin, numleds: number): Strip {
+    export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
-        strip.buf = pins.createBuffer(numleds * 3);
+        let stride = mode === NeoPixelMode.RGB ? 3 : 4;
+        strip.buf = pins.createBuffer(numleds * stride);
         strip.setBrigthness(255)
         strip.setPin(pin)
         strip.start = 0;
         strip._length = numleds;
+        strip._mode = mode;
         return strip;
     }
 
@@ -241,7 +309,7 @@ namespace neopixel {
     //% weight=1
     //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue"
     export function rgb(red: number, green: number, blue: number): number {
-        return ((red & 0x0ff) << 16) | ((green & 0x0ff) << 8) | (blue & 0x0ff);
+        return packRGB(red,green,blue);
     }
 
     /**
@@ -251,5 +319,98 @@ namespace neopixel {
     //% blockId="neopixel_colors" block="%color"
     export function colors(color: NeoPixelColors): number {
         return color;
+    }
+
+    function packRGB(a: number, b: number, c: number): number {
+        return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
+    }
+    function unpackR(rgb: number): number {   
+        let r = (rgb >> 16) & 0xFF;
+        return r;
+    }
+    function unpackG(rgb: number): number {   
+        let g = (rgb >> 8) & 0xFF;
+        return g;
+    }
+    function unpackB(rgb: number): number {   
+        let b = (rgb) & 0xFF;
+        return b;
+    }
+
+    /**
+     * A HSL (hue, saturation, luminosity) format color
+     */
+    export class HSL {
+        h: number;
+        s: number;
+        l: number;
+        constructor(h: number, s: number, l: number) {
+            this.h = h % 360;
+            this.s = Math.clamp(0, 99, s);
+            this.l = Math.clamp(0, 99, l);
+        }
+
+        /**
+         * Shifts the hue of a HSL color
+         * @param hsl the HSL (hue, saturation, lightness) color
+         * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
+         */
+        //% weight=1
+        //% blockId="neopixel_rotate_hue" block="shift %hsl| hue by %offset"
+        rotateHue(offset: number): void {
+            this.h = (this.h + offset) % 360;
+        }
+
+        /**
+         * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
+         * green, blue) format color. Input ranges h between [0,360], s between 
+         * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
+        */
+        //% weight=2 blockGap=8
+        //% blockId="neopixel_hsl_to_rgb" block="%hsl| to RGB"
+        toRGB(): number{
+            //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+            let h = this.h;
+            let s = this.s;
+            let l = this.l;
+            let c = (((100 - Math.abs(2*l - 100))*s)<<8)/10000; //chroma, [0,255]
+            let h1 = h/60;//[0,6]
+            let h2 = (h - h1*60)*256/60;//[0,255]
+            let temp = Math.abs((((h1 % 2) << 8) + h2) - 256);
+            let x = (c * (256 - (temp))) >> 8;//[0,255], second largest component of this color
+            let r$: number;
+            let g$: number;
+            let b$: number;
+            if (h1 == 0) {
+                r$ = c; g$ = x; b$ = 0;
+            } else if (h1 == 1) {
+                r$ = x; g$ = c; b$ = 0;
+            } else if (h1 == 2) {
+                r$ = 0; g$ = c; b$ = x;
+            } else if (h1 == 3) {
+                r$ = 0; g$ = x; b$ = c;
+            } else if (h1 == 4) {
+                r$ = x; g$ = 0; b$ = c;
+            } else if (h1 == 5) {
+                r$ = c; g$ = 0; b$ = x;
+            }
+            let m = ((l*2 << 8)/100 - c)/2;
+            let r = r$+m;
+            let g = g$+m;
+            let b = b$+m;
+            return packRGB(r,g,b);
+        }
+    }
+
+    /**
+     * Creates a HSL (hue, saturation, luminosity) color
+     * @param hue value of the hue channel between 0 and 360. eg: 360
+     * @param sat value of the saturation channel between 0 and 100. eg: 100
+     * @param lum value of the luminosity channel between 0 and 100. eg: 100
+     */
+    //% weight=1
+    //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
+    export function hsl(hue: number, sat: number, lum: number): HSL {
+        return new HSL(hue, sat, lum);
     }
 }
