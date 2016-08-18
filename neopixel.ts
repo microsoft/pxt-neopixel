@@ -61,12 +61,10 @@ namespace neopixel {
         //% weight=85 blockGap=8
         //% parts="neopixel"
         showRainbow(startHue: number = 0, endHue: number = 360) {
-            while (endHue <= startHue)
-                endHue += 360;
             let hDist = endHue - startHue;
             let hStep = hDist / this._length;
             for (let i = 0; i < this._length; i++) {
-                let h = i * hStep;
+                let h = startHue + i * hStep;
                 let hsl = neopixel.hsl(h, 100, 50);
                 let rgb = hsl.toRGB();
                 this.setPixelColor(i, rgb)
