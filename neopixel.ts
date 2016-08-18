@@ -57,11 +57,14 @@ namespace neopixel {
         /**
          * Shows a rainbow pattern on all LEDs. 
          */
-        //% blockId="neopixel_set_strip_rainbow" block="%strip|show rainbow" 
+        //% blockId="neopixel_set_strip_rainbow" block="%strip|show rainbow from %startHue=0 to %endHue=360" 
         //% weight=85 blockGap=8
         //% parts="neopixel"
-        showRainbow() {
-            let hStep = 360 / this._length;
+        showRainbow(startHue: number = 0, endHue: number = 360) {
+            while (endHue <= startHue)
+                endHue += 360;
+            let hDist = endHue - startHue;
+            let hStep = hDist / this._length;
             for (let i = 0; i < this._length; i++) {
                 let h = i * hStep;
                 let hsl = neopixel.hsl(h, 100, 50);
@@ -315,7 +318,7 @@ namespace neopixel {
      * @param pin the pin where the neopixel is connected.
      * @param numleds number of leds in the strip, eg: 24,30,60,64
      */
-    //% blockId="neopixel_create" block="%mode=NeoPixelMode.RGB|NeoPixel strip|at pin %pin|with %numleds|leds "
+    //% blockId="neopixel_create" block="NeoPixel strip|at pin %pin|with %numleds|leds as %mode=NeoPixelMode.RGB"
     //% weight=90 blockGap=8
     //% parts="neopixel"
     export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
