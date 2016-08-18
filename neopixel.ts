@@ -26,6 +26,7 @@ enum NeoPixelMode {
 //% weight=5 color=#2699BF
 namespace neopixel {
     //% shim=sendBufferAsm
+    //% parts="neopixel"
     function sendBuffer(buf: Buffer, pin: DigitalPin) {
     }
 
@@ -47,6 +48,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_set_strip_color" block="%strip|show color %rgb=neopixel_colors" 
         //% weight=85 blockGap=8
+        //% parts="neopixel"
         showColor(rgb: number) {
             this.setAllRGB(rgb);
             this.show();
@@ -60,6 +62,7 @@ namespace neopixel {
          */
         //% weight=84
         //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value |up to %high" icon="\uf080" blockExternalInputs=true
+        //% parts="neopixel"
         showBarGraph(value: number, high: number): void {
             if (high <= 0) {
                 this.clear();
@@ -95,6 +98,7 @@ namespace neopixel {
         //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %pixeloffset|to %rgb=neopixel_colors" 
         //% blockGap=8
         //% weight=80
+        //% parts="neopixel"
         setPixelColor(pixeloffset: number, rgb: number): void {
             this.setPixelRGB(pixeloffset, rgb);
         }
@@ -107,6 +111,7 @@ namespace neopixel {
         //% blockId="neopixel_set_pixel_white" block="%strip|set pixel white LED at %pixeloffset|to %white" 
         //% blockGap=8
         //% weight=80
+        //% parts="neopixel"
         setPixelWhiteLED(pixeloffset: number, white: number): void {
             if (this._mode === NeoPixelMode.RGBW) {
                 this.setPixelW(pixeloffset, white);
@@ -118,6 +123,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_show" block="%strip|show" blockGap=8
         //% weight=79
+        //% parts="neopixel"
         show() {
             basic.pause(1)
             sendBuffer(this.buf, this.pin);
@@ -128,6 +134,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_clear" block="%strip|clear"
         //% weight=76
+        //% parts="neopixel"
         clear(): void {
             this.buf.fill(0, this.start, this._length);
             this.show();
@@ -147,6 +154,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_set_brightness" block="%strip|set brightness %brightness" blockGap=8
         //% weight=59
+        //% parts="neopixel"
         setBrigthness(brightness: number): void {
             this.brightness = brightness & 0xff;
         }
@@ -158,6 +166,7 @@ namespace neopixel {
          */
         //% weight=89
         //% blockId="neopixel_range" block="%strip|range from %start|with %length|leds"
+        //% parts="neopixel"
         range(start: number, length: number): Strip {
             let strip = new Strip();
             strip.buf = this.buf;
@@ -175,6 +184,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_shift" block="%strip|shift pixels by %offset" blockGap=8
         //% weight=40
+        //% parts="neopixel"
         shift(offset: number = 1): void {
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             this.buf.shift(-offset * stride, this.start * stride, this._length * stride)
@@ -187,6 +197,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_rotate" block="%strip|rotate pixels by %offset" blockGap=8
         //% weight=39
+        //% parts="neopixel"
         rotate(offset: number = 1): void {
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
@@ -196,6 +207,7 @@ namespace neopixel {
          * Set the pin where the neopixel is connected, defaults to P0.
          */
         //% weight=10
+        //% parts="neopixel"
         setPin(pin: DigitalPin): void {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0)
@@ -288,6 +300,7 @@ namespace neopixel {
      */
     //% blockId="neopixel_create" block="%mode=NeoPixelMode.RGB|NeoPixel strip|at pin %pin|with %numleds|leds "
     //% weight=90 blockGap=8
+    //% parts="neopixel"
     export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
         let stride = mode === NeoPixelMode.RGB ? 3 : 4;
