@@ -55,6 +55,23 @@ namespace neopixel {
         }
 
         /**
+         * Shows a rainbow pattern on all LEDs. 
+         */
+        //% blockId="neopixel_set_strip_rainbow" block="%strip|show rainbow" 
+        //% weight=85 blockGap=8
+        //% parts="neopixel"
+        showRainbow() {
+            let hStep = 360 / this._length;
+            for (let i = 0; i < this._length; i++) {
+                let h = i * hStep;
+                let hsl = neopixel.hsl(h, 100, 50);
+                let rgb = hsl.toRGB();
+                this.setPixelColor(i, rgb)
+            }
+            this.show();
+        }
+
+        /**
          * Displays a vertical bar graph based on the `value` and `high` value.
          * If `high` is 0, the chart gets adjusted automatically.
          * @param value current value to plot
