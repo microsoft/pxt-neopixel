@@ -56,18 +56,18 @@ namespace neopixel {
 
         /**
          * Shows a rainbow pattern on all LEDs. 
-         * @param startHue the start hue value for the rainbow, eg: 0
+         * @param startHue the start hue value for the rainbow, eg: 1
          * @param endHue the end hue value for the rainbow, eg: 360
          */
         //% blockId="neopixel_set_strip_rainbow" block="%strip|show rainbow from %startHue|to %endHue" 
         //% weight=85 blockGap=8
         //% parts="neopixel"
-        showRainbow(startHue: number = 0, endHue: number = 360) {
-            let hDist = endHue - startHue;
-            let hStep = hDist / this._length;
-            for (let i = 0; i < this._length; i++) {
-                let h = startHue + i * hStep;
-                let hsl = neopixel.hsl(h, 100, 50);
+        showRainbow(startHue: number, endHue: number) {
+            let start = neopixel.hsl(startHue, 100, 50);
+            let end = neopixel.hsl(endHue, 100, 50);
+            let colors = neopixel.interpolateHSL(start, end, this._length, HueInterpolationDirection.Clockwise);
+            for (let i = 0; i < colors.length; i++) {
+                let hsl = colors[i];
                 let rgb = hsl.toRGB();
                 this.setPixelColor(i, rgb)
             }
@@ -445,5 +445,72 @@ namespace neopixel {
     //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
     export function hsl(hue: number, sat: number, lum: number): HSL {
         return new HSL(hue, sat, lum);
+    }
+
+    export enum HueInterpolationDirection {
+        Clockwise,
+        CounterClockwise,
+        Shortest
+    }
+
+    /**
+     * Interpolates between two HSL colors
+     * @param startColor the start HSL color
+     * @param endColor the end HSL color
+     * @param steps the number of steps to interpolate for. Note that if steps 
+     *  is 1, the color midway between the start and end color will be returned.
+     * @param direction the direction around the color wheel the hue should be interpolated.
+     */
+    //% parts="neopixel"
+    export function interpolateHSL(startColor: HSL, endColor: HSL, steps: number, direction: HueInterpolationDirection): HSL[] {
+        if (steps <= 0)
+            steps = 1;
+
+        //hue
+        let h1 = startColor.h; 
+        let h2 = endColor.h;
+        let hDistCW = ((h2 + 360) - h1) % 360;
+        let hStepCW = (hDistCW*100)/steps;
+        let hDistCCW = ((h1 + 360) - h2) % 360;
+        let hStepCCW = -(hDistCCW*100)/steps
+        let hStep: number;
+        if (direction === HueInterpolationDirection.Clockwise) {
+            hStep = hStepCW;
+        } else if (direction === HueInterpolationDirection.CounterClockwise) {
+            hStep = hStepCCW;
+        } else {
+            hStep = hDistCW < hDistCCW ? hStepCW : hStepCCW;
+        }
+        let h1_100 = h1*100; //we multiply by 100 so we keep more accurate results while doing interpolation
+
+        //sat
+        let s1 = startColor.s;
+        let s2 = endColor.s;
+        let sDist = s2 - s1;
+        let sStep = sDist/steps;
+        let s1_100 = s1*100;
+
+        //lum
+        let l1 = startColor.l;
+        let l2 = endColor.l;
+        let lDist = l2 - l1;
+        let lStep = lDist/steps;
+        let l1_100 = l1*100
+
+        //interpolate
+        let colors: HSL[] = [];
+        if (steps === 1) {
+            colors.push(hsl(h1+hStep, s1+sStep, l1+lStep));
+        } else {
+            colors.push(startColor);
+            for (let i = 1; i < steps-1; i++) {
+                let h = (h1_100 + i*hStep)/100 + 360;
+                let s = (s1_100 + i*sStep)/100;
+                let l = (l1_100 + i*lStep)/100;
+                colors.push(hsl(h,s,l));
+            }
+            colors.push(endColor);
+        }
+        return colors;
     }
 }
