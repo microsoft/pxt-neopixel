@@ -9,7 +9,8 @@ enum NeoPixelColors {
     Blue = 0x0000FF,
     Indigo = 0x4b0082,
     Violet = 0x8a2be2,
-    Purple = 0xFF00FF
+    Purple = 0xFF00FF,
+    White = 0xFFFFFF
 }
 
 /**
@@ -17,6 +18,7 @@ enum NeoPixelColors {
  */
 enum NeoPixelMode {
     RGB = 0,
+    //% block="RGB+W"
     RGBW = 1
 }
 
@@ -62,7 +64,7 @@ namespace neopixel {
         //% blockId="neopixel_set_strip_rainbow" block="%strip|show rainbow from %startHue|to %endHue" 
         //% weight=85 blockGap=8
         //% parts="neopixel"
-        showRainbow(startHue: number, endHue: number) {
+        showRainbow(startHue: number = 1, endHue: number = 360) {
             let start = neopixel.hsl(startHue, 100, 50);
             let end = neopixel.hsl(endHue, 100, 50);
             let colors = neopixel.interpolateHSL(start, end, this._length, HueInterpolationDirection.Clockwise);
