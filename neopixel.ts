@@ -88,6 +88,8 @@ namespace neopixel {
         showBarGraph(value: number, high: number): void {
             if (high <= 0) {
                 this.clear();
+                this.setPixelColor(0, NeoPixelColors.Yellow);
+                this.show();
                 return;
             }
 
@@ -137,7 +139,7 @@ namespace neopixel {
         setPixelWhiteLED(pixeloffset: number, white: number): void {
             if (this._mode === NeoPixelMode.RGBW) {
                 this.setPixelW(pixeloffset, white);
-            }    
+            }
         }
 
         /**
@@ -152,14 +154,15 @@ namespace neopixel {
         }
 
         /**
-         * Turn off all LEDs and shows.
+         * Turn off all LEDs.
+         * You need to call ``show`` to make the changes visible.
          */
         //% blockId="neopixel_clear" block="%strip|clear"
         //% weight=76
         //% parts="neopixel"
         clear(): void {
-            this.buf.fill(0, this.start, this._length);
-            this.show();
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            this.buf.fill(0, this.start * stride, this._length * stride);
         }
 
         /**
@@ -208,7 +211,7 @@ namespace neopixel {
         //% weight=40
         //% parts="neopixel"
         shift(offset: number = 1): void {
-            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             this.buf.shift(-offset * stride, this.start * stride, this._length * stride)
         }
 
@@ -221,7 +224,7 @@ namespace neopixel {
         //% weight=39
         //% parts="neopixel"
         rotate(offset: number = 1): void {
-            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
         }
 
@@ -240,7 +243,7 @@ namespace neopixel {
             let red = unpackR(rgb);
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
-            
+
             let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
 
             let br = this.brightness;
@@ -261,7 +264,7 @@ namespace neopixel {
         private setAllW(white: number) {
             if (this._mode !== NeoPixelMode.RGBW)
                 return;
-            
+
             let br = this.brightness;
             if (br < 255) {
                 white = (white * br) >> 8;
@@ -299,7 +302,7 @@ namespace neopixel {
         private setPixelW(pixeloffset: number, white: number): void {
             if (this._mode !== NeoPixelMode.RGBW)
                 return;
-            
+
             if (pixeloffset < 0
                 || pixeloffset >= this._length)
                 return;
@@ -345,7 +348,7 @@ namespace neopixel {
     //% weight=1
     //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue"
     export function rgb(red: number, green: number, blue: number): number {
-        return packRGB(red,green,blue);
+        return packRGB(red, green, blue);
     }
 
     /**
@@ -360,15 +363,15 @@ namespace neopixel {
     function packRGB(a: number, b: number, c: number): number {
         return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
     }
-    function unpackR(rgb: number): number {   
+    function unpackR(rgb: number): number {
         let r = (rgb >> 16) & 0xFF;
         return r;
     }
-    function unpackG(rgb: number): number {   
+    function unpackG(rgb: number): number {
         let g = (rgb >> 8) & 0xFF;
         return g;
     }
-    function unpackB(rgb: number): number {   
+    function unpackB(rgb: number): number {
         let b = (rgb) & 0xFF;
         return b;
     }
@@ -404,14 +407,14 @@ namespace neopixel {
         */
         //% weight=2 blockGap=8
         //% blockId="neopixel_hsl_to_rgb" block="%hsl| to RGB"
-        toRGB(): number{
+        toRGB(): number {
             //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
             let h = this.h;
             let s = this.s;
             let l = this.l;
-            let c = (((100 - Math.abs(2*l - 100))*s)<<8)/10000; //chroma, [0,255]
-            let h1 = h/60;//[0,6]
-            let h2 = (h - h1*60)*256/60;//[0,255]
+            let c = (((100 - Math.abs(2 * l - 100)) * s) << 8) / 10000; //chroma, [0,255]
+            let h1 = h / 60;//[0,6]
+            let h2 = (h - h1 * 60) * 256 / 60;//[0,255]
             let temp = Math.abs((((h1 % 2) << 8) + h2) - 256);
             let x = (c * (256 - (temp))) >> 8;//[0,255], second largest component of this color
             let r$: number;
@@ -430,11 +433,11 @@ namespace neopixel {
             } else if (h1 == 5) {
                 r$ = c; g$ = 0; b$ = x;
             }
-            let m = ((l*2 << 8)/100 - c)/2;
-            let r = r$+m;
-            let g = g$+m;
-            let b = b$+m;
-            return packRGB(r,g,b);
+            let m = ((l * 2 << 8) / 100 - c) / 2;
+            let r = r$ + m;
+            let g = g$ + m;
+            let b = b$ + m;
+            return packRGB(r, g, b);
         }
     }
 
@@ -470,12 +473,12 @@ namespace neopixel {
             steps = 1;
 
         //hue
-        let h1 = startColor.h; 
+        let h1 = startColor.h;
         let h2 = endColor.h;
         let hDistCW = ((h2 + 360) - h1) % 360;
-        let hStepCW = (hDistCW*100)/steps;
+        let hStepCW = (hDistCW * 100) / steps;
         let hDistCCW = ((h1 + 360) - h2) % 360;
-        let hStepCCW = -(hDistCCW*100)/steps
+        let hStepCCW = -(hDistCCW * 100) / steps
         let hStep: number;
         if (direction === HueInterpolationDirection.Clockwise) {
             hStep = hStepCW;
@@ -484,33 +487,33 @@ namespace neopixel {
         } else {
             hStep = hDistCW < hDistCCW ? hStepCW : hStepCCW;
         }
-        let h1_100 = h1*100; //we multiply by 100 so we keep more accurate results while doing interpolation
+        let h1_100 = h1 * 100; //we multiply by 100 so we keep more accurate results while doing interpolation
 
         //sat
         let s1 = startColor.s;
         let s2 = endColor.s;
         let sDist = s2 - s1;
-        let sStep = sDist/steps;
-        let s1_100 = s1*100;
+        let sStep = sDist / steps;
+        let s1_100 = s1 * 100;
 
         //lum
         let l1 = startColor.l;
         let l2 = endColor.l;
         let lDist = l2 - l1;
-        let lStep = lDist/steps;
-        let l1_100 = l1*100
+        let lStep = lDist / steps;
+        let l1_100 = l1 * 100
 
         //interpolate
         let colors: HSL[] = [];
         if (steps === 1) {
-            colors.push(hsl(h1+hStep, s1+sStep, l1+lStep));
+            colors.push(hsl(h1 + hStep, s1 + sStep, l1 + lStep));
         } else {
             colors.push(startColor);
-            for (let i = 1; i < steps-1; i++) {
-                let h = (h1_100 + i*hStep)/100 + 360;
-                let s = (s1_100 + i*sStep)/100;
-                let l = (l1_100 + i*lStep)/100;
-                colors.push(hsl(h,s,l));
+            for (let i = 1; i < steps - 1; i++) {
+                let h = (h1_100 + i * hStep) / 100 + 360;
+                let s = (s1_100 + i * sStep) / 100;
+                let l = (l1_100 + i * lStep) / 100;
+                colors.push(hsl(h, s, l));
             }
             colors.push(endColor);
         }
