@@ -175,13 +175,40 @@ namespace neopixel {
         }
 
         /**
-         * Set the brightness of the strip, 0-255. eg: 255
+         * Set the brightness of the strip. This flag only applies to future operation.
+         * @param brightness a measure of LED brightness in 0-255. eg: 255
          */
         //% blockId="neopixel_set_brightness" block="%strip|set brightness %brightness" blockGap=8
         //% weight=59
         //% parts="neopixel"
         setBrigthness(brightness: number): void {
             this.brightness = brightness & 0xff;
+        }
+
+        /**
+         * Apply brightness to current colors using a quadratic easing function.
+         **/
+        //% blockId="neopixel_each_brightness" block="%strip|ease brightness" blockGap=8
+        //% weight=58
+        //% parts="neopixel"
+        easeBrightness(): void {
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const br = this.brightness;
+            const buf = this.buf;
+            const end = this.start + this._length;
+            const mid = this._length / 2;
+            for (let i = this.start; i < end; ++i) {
+                const k = i - this.start;
+                const ledoffset = i * stride;
+                const br = k > mid ? 255 * (this._length - 1 - k) * (this._length - 1 - k) / (mid * mid) : 255 * k * k / (mid * mid);
+                serial.writeLine(k + ":" + br);
+                const r = (buf[ledoffset + 0] * br) >> 8; buf[ledoffset + 0] = r;
+                const g = (buf[ledoffset + 1] * br) >> 8; buf[ledoffset + 1] = g;
+                const b = (buf[ledoffset + 2] * br) >> 8; buf[ledoffset + 2] = b;
+                if (stride == 4) {
+                    const w = (buf[ledoffset + 3] * br) >> 8; buf[ledoffset + 3] = w;
+                }
+            }
         }
 
         /** 
@@ -244,16 +271,16 @@ namespace neopixel {
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
 
-            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
 
-            let br = this.brightness;
+            const br = this.brightness;
             if (br < 255) {
                 red = (red * br) >> 8;
                 green = (green * br) >> 8;
                 blue = (blue * br) >> 8;
             }
-            let buf = this.buf;
-            let end = this.start + this._length;
+            const buf = this.buf;
+            const end = this.start + this._length;
             for (let i = this.start; i < end; ++i) {
                 let ledoffset = i * stride;
                 buf[ledoffset + 0] = green;
