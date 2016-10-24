@@ -87,7 +87,7 @@ namespace neopixel {
         //% parts="neopixel"
         showBarGraph(value: number, high: number): void {
             if (high <= 0) {
-                this.clear();
+                this.clearBuffer();
                 this.setPixelColor(0, NeoPixelColors.Yellow);
                 this.show();
                 return;
@@ -155,14 +155,13 @@ namespace neopixel {
 
         /**
          * Turn off all LEDs.
-         * You need to call ``show`` to make the changes visible.
          */
         //% blockId="neopixel_clear" block="%strip|clear"
         //% weight=76
         //% parts="neopixel"
         clear(): void {
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
-            this.buf.fill(0, this.start * stride, this._length * stride);
+            this.clearBuffer();
+            this.show();
         }
 
         /**
@@ -264,6 +263,11 @@ namespace neopixel {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0)
             basic.pause(50)
+        }
+
+        private clearBuffer() : void {
+            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            this.buf.fill(0, this.start * stride, this._length * stride);
         }
 
         private setAllRGB(rgb: number) {
