@@ -122,7 +122,7 @@ namespace neopixel {
         //% blockId="neopixel_set_pixel_color" block="%strip|set pixel color at %pixeloffset|to %rgb=neopixel_colors" 
         //% blockGap=8
         //% weight=80
-        //% parts="neopixel"
+        //% parts="neopixel" advanced=true
         setPixelColor(pixeloffset: number, rgb: number): void {
             this.setPixelRGB(pixeloffset, rgb);
         }
@@ -135,7 +135,7 @@ namespace neopixel {
         //% blockId="neopixel_set_pixel_white" block="%strip|set pixel white LED at %pixeloffset|to %white" 
         //% blockGap=8
         //% weight=80
-        //% parts="neopixel"
+        //% parts="neopixel" advanced=true
         setPixelWhiteLED(pixeloffset: number, white: number): void {
             if (this._mode === NeoPixelMode.RGBW) {
                 this.setPixelW(pixeloffset, white);
@@ -169,7 +169,7 @@ namespace neopixel {
          * Gets the number of pixels declared on the strip
          */
         //% blockId="neopixel_length" block="%strip|length" blockGap=8
-        //% weight=60
+        //% weight=60 advanced=true
         length() {
             return this._length;
         }
@@ -180,7 +180,7 @@ namespace neopixel {
          */
         //% blockId="neopixel_set_brightness" block="%strip|set brightness %brightness" blockGap=8
         //% weight=59
-        //% parts="neopixel"
+        //% parts="neopixel" advanced=true
         setBrigthness(brightness: number): void {
             this.brightness = brightness & 0xff;
         }
@@ -190,7 +190,7 @@ namespace neopixel {
          **/
         //% blockId="neopixel_each_brightness" block="%strip|ease brightness" blockGap=8
         //% weight=58
-        //% parts="neopixel"
+        //% parts="neopixel" advanced=true
         easeBrightness(): void {
             const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
             const br = this.brightness;
@@ -259,7 +259,7 @@ namespace neopixel {
          * Set the pin where the neopixel is connected, defaults to P0.
          */
         //% weight=10
-        //% parts="neopixel"
+        //% parts="neopixel" advanced=true
         setPin(pin: DigitalPin): void {
             this.pin = pin;
             pins.digitalWritePin(this.pin, 0)
@@ -374,6 +374,7 @@ namespace neopixel {
      */
     //% weight=1
     //% blockId="neopixel_rgb" block="red %red|green %green|blue %blue"
+    //% advanced=true
     export function rgb(red: number, green: number, blue: number): number {
         return packRGB(red, green, blue);
     }
@@ -383,6 +384,7 @@ namespace neopixel {
     */
     //% weight=2 blockGap=8
     //% blockId="neopixel_colors" block="%color"
+    //% advanced=true
     export function colors(color: NeoPixelColors): number {
         return color;
     }
@@ -423,6 +425,7 @@ namespace neopixel {
          */
         //% weight=1
         //% blockId="neopixel_rotate_hue" block="shift %hsl| hue by %offset"
+        //% advanced=true
         rotateHue(offset: number): void {
             this.h = (this.h + offset) % 360;
         }
@@ -434,6 +437,7 @@ namespace neopixel {
         */
         //% weight=2 blockGap=8
         //% blockId="neopixel_hsl_to_rgb" block="%hsl| to RGB"
+        //% advanced=true
         toRGB(): number {
             //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
             let h = this.h;
@@ -476,6 +480,7 @@ namespace neopixel {
      */
     //% weight=1
     //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
+    //% advanced=true
     export function hsl(hue: number, sat: number, lum: number): HSL {
         return new HSL(hue, sat, lum);
     }
@@ -495,6 +500,7 @@ namespace neopixel {
      * @param direction the direction around the color wheel the hue should be interpolated.
      */
     //% parts="neopixel"
+    //% advanced=true
     export function interpolateHSL(startColor: HSL, endColor: HSL, steps: number, direction: HueInterpolationDirection): HSL[] {
         if (steps <= 0)
             steps = 1;
