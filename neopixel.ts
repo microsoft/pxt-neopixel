@@ -2,14 +2,23 @@
  * Well known colors for a NeoPixel strip
  */
 enum NeoPixelColors {
+    //% block=red
     Red = 0xFF0000,
+    //% block=orange
     Orange = 0xFFA500,
+    //% block=yellow
     Yellow = 0xFFFF00,
+    //% block=green
     Green = 0x00FF00,
+    //% block=blue
     Blue = 0x0000FF,
+    //% block=indigo
     Indigo = 0x4b0082,
+    //% block=violet
     Violet = 0x8a2be2,
+    //% block=purple
     Purple = 0xFF00FF,
+    //% block=white
     White = 0xFFFFFF
 }
 
@@ -18,7 +27,7 @@ enum NeoPixelColors {
  */
 enum NeoPixelMode {
     //% block="RGB (GRB format)"
-    RGB = 0, 
+    RGB = 0,
     //% block="RGB+W"
     RGBW = 1,
     //% block="RGB (RGB format)"
@@ -269,7 +278,7 @@ namespace neopixel {
             basic.pause(50)
         }
 
-        private setBufferRGB(offset : number, red: number, green: number, blue: number): void {
+        private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
             if (this._mode === NeoPixelMode.RGB_RGB) {
                 this.buf[offset + 0] = red;
                 this.buf[offset + 1] = green;
@@ -294,7 +303,7 @@ namespace neopixel {
             const end = this.start + this._length;
             const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             for (let i = this.start; i < end; ++i) {
-                this.setBufferRGB(i*stride,red,green,blue)
+                this.setBufferRGB(i * stride, red, green, blue)
             }
         }
         private setAllW(white: number) {
@@ -330,7 +339,7 @@ namespace neopixel {
                 green = (green * br) >> 8;
                 blue = (blue * br) >> 8;
             }
-            this.setBufferRGB(pixeloffset,red,green,blue)
+            this.setBufferRGB(pixeloffset, red, green, blue)
         }
         private setPixelW(pixeloffset: number, white: number): void {
             if (this._mode !== NeoPixelMode.RGBW)
