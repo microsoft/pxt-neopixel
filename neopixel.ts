@@ -17,9 +17,12 @@ enum NeoPixelColors {
  * Different modes for RGB or RGB+W NeoPixel strips
  */
 enum NeoPixelMode {
-    RGB = 0,
+    //% block="RGB (GRB format)"
+    RGB = 0, 
     //% block="RGB+W"
-    RGBW = 1
+    RGBW = 1,
+    //% block="RGB (RGB format)"
+    RGB_RGB = 2
 }
 
 /**
@@ -161,7 +164,7 @@ namespace neopixel {
         //% weight=76
         //% parts="neopixel"
         clear(): void {
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             this.buf.fill(0, this.start * stride, this._length * stride);
         }
 
@@ -192,7 +195,7 @@ namespace neopixel {
         //% weight=58
         //% parts="neopixel" advanced=true
         easeBrightness(): void {
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             const br = this.brightness;
             const buf = this.buf;
             const end = this.start + this._length;
@@ -238,7 +241,7 @@ namespace neopixel {
         //% weight=40
         //% parts="neopixel"
         shift(offset: number = 1): void {
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             this.buf.shift(-offset * stride, this.start * stride, this._length * stride)
         }
 
@@ -251,7 +254,7 @@ namespace neopixel {
         //% weight=39
         //% parts="neopixel"
         rotate(offset: number = 1): void {
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
         }
 
@@ -266,12 +269,21 @@ namespace neopixel {
             basic.pause(50)
         }
 
+        private setBufferRGB(offset : number, red: number, green: number, blue: number): void {
+            if (this._mode === NeoPixelMode.RGB_RGB) {
+                this.buf[offset + 0] = red;
+                this.buf[offset + 1] = green;
+            } else {
+                this.buf[offset + 0] = green;
+                this.buf[offset + 1] = red;
+            }
+            this.buf[offset + 2] = blue;
+        }
+
         private setAllRGB(rgb: number) {
             let red = unpackR(rgb);
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
-
-            const stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
 
             const br = this.brightness;
             if (br < 255) {
@@ -279,13 +291,10 @@ namespace neopixel {
                 green = (green * br) >> 8;
                 blue = (blue * br) >> 8;
             }
-            const buf = this.buf;
             const end = this.start + this._length;
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * stride;
-                buf[ledoffset + 0] = green;
-                buf[ledoffset + 1] = red;
-                buf[ledoffset + 2] = blue;
+                this.setBufferRGB(i*stride,red,green,blue)
             }
         }
         private setAllW(white: number) {
@@ -308,7 +317,7 @@ namespace neopixel {
                 || pixeloffset >= this._length)
                 return;
 
-            let stride = this._mode === NeoPixelMode.RGB ? 3 : 4;
+            let stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             pixeloffset = (pixeloffset + this.start) * stride;
 
             let red = unpackR(rgb);
@@ -321,10 +330,7 @@ namespace neopixel {
                 green = (green * br) >> 8;
                 blue = (blue * br) >> 8;
             }
-            let buf = this.buf;
-            buf[pixeloffset + 0] = green;
-            buf[pixeloffset + 1] = red;
-            buf[pixeloffset + 2] = blue;
+            this.setBufferRGB(pixeloffset,red,green,blue)
         }
         private setPixelW(pixeloffset: number, white: number): void {
             if (this._mode !== NeoPixelMode.RGBW)
@@ -356,7 +362,7 @@ namespace neopixel {
     //% trackArgs=0,2
     export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
-        let stride = mode === NeoPixelMode.RGB ? 3 : 4;
+        let stride = mode === NeoPixelMode.RGBW ? 4 : 3;
         strip.buf = pins.createBuffer(numleds * stride);
         strip.setBrigthness(255)
         strip.setPin(pin)

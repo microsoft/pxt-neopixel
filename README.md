@@ -10,7 +10,7 @@ separately.
 
 ```blocks
 // Create a NeoPixel driver - specify the pin, number of LEDs, and the type of 
-// the NeoPixel srip, either standard RGB or RGB+White.
+// the NeoPixel srip, either standard RGB (with GRB or RGB format) or RGB+White.
 let strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB)
 
 // set pixel colors
