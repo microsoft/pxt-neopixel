@@ -491,7 +491,7 @@ namespace neopixel {
      * Creates a HSL (hue, saturation, luminosity) color
      * @param hue value of the hue channel between 0 and 360. eg: 360
      * @param sat value of the saturation channel between 0 and 100. eg: 100
-     * @param lum value of the luminosity channel between 0 and 100. eg: 100
+     * @param lum value of the luminosity channel between 0 and 100. eg: 50
      */
     //% weight=1
     //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
