@@ -274,8 +274,8 @@ namespace neopixel {
         //% parts="neopixel" advanced=true
         setPin(pin: DigitalPin): void {
             this.pin = pin;
-            pins.digitalWritePin(this.pin, 0)
-            basic.pause(50)
+            pins.digitalWritePin(this.pin, 0);
+            // don't yield to avoid races on initialization
         }
 
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
@@ -373,11 +373,11 @@ namespace neopixel {
         let strip = new Strip();
         let stride = mode === NeoPixelMode.RGBW ? 4 : 3;
         strip.buf = pins.createBuffer(numleds * stride);
-        strip.setBrigthness(255)
-        strip.setPin(pin)
         strip.start = 0;
         strip._length = numleds;
         strip._mode = mode;
+        strip.setBrigthness(255)
+        strip.setPin(pin)
         return strip;
     }
 
