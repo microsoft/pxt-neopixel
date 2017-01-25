@@ -161,7 +161,6 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            basic.pause(1)
             sendBuffer(this.buf, this.pin);
         }
 
