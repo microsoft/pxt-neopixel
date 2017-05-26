@@ -192,7 +192,7 @@ namespace neopixel {
         //% blockId="neopixel_set_brightness" block="%strip|set brightness %brightness" blockGap=8
         //% weight=59
         //% parts="neopixel" advanced=true
-        setBrigthness(brightness: number): void {
+        setBrightness(brightness: number): void {
             this.brightness = brightness & 0xff;
         }
 
@@ -375,7 +375,7 @@ namespace neopixel {
         strip.start = 0;
         strip._length = numleds;
         strip._mode = mode;
-        strip.setBrigthness(255)
+        strip.setBrightness(255)
         strip.setPin(pin)
         return strip;
     }

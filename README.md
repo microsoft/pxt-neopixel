@@ -23,7 +23,7 @@ strip.setPixelColor(3, NeoPixelColors.Blue);    // blue
 strip.show()
 ```
 
-Use ``||setBrigthness||`` to lower the brightness (it's maxed out by default).
+Use ``||setBrightness||`` to lower the brightness (it's maxed out by default).
 
 Use ``||shift||`` or ``||rotate||`` to shift the lights around.
 
@@ -65,7 +65,7 @@ This program uses HSL colors to display an animated rainbow pattern along the fi
 // setup
 let stripLen = 12;
 let np = neopixel.create(DigitalPin.P0, stripLen, NeoPixelMode.RGB)
-np.setBrigthness(10)
+np.setBrightness(10)
 
 // compute colors in HSL, store colors in RGB
 let colors: number[] = [];
