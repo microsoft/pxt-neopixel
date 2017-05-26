@@ -23,13 +23,13 @@
     basic.pause(200);
 
     let br = 100;
-    strip.setBrigthness(100);
+    strip.setBrightness(100);
     input.onButtonPressed(Button.B, () => {
         br = br + 20;
         if (br > 255) {
             br = 5;
         }
-        strip.setBrigthness(br);
+        strip.setBrightness(br);
     });
 
     let rotationMode = false;
