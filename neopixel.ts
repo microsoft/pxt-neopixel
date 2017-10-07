@@ -287,7 +287,7 @@ namespace neopixel {
             for (let i = 0; i < this.buf.length; ++i) {
                 p += this.buf[i];
             }
-            p = (p * 43212) / 1000000;            
+            p = (p * 433) / 10000;            
             serial.writeValue("P" + (this.pin <= 23 ? this.pin - 7 : this.pin - 5), p);
         }
 
