@@ -277,6 +277,20 @@ namespace neopixel {
             // don't yield to avoid races on initialization
         }
 
+        /**
+         * Estimates the power consumption for the entire strip and writes it to the serial.
+         */
+        //% weight=9 blockI=neopixel_writepowertoserial block="%strip|write power to serial"
+        //% advanced=true
+        writePowerToSerial() {
+            let p = 0;
+            for (let i = 0; i < this.buf.length; ++i) {
+                p += this.buf[i];
+            }
+            p = (p * 43212) / 1000000;            
+            serial.writeValue("P" + (this.pin <= 23 ? this.pin - 7 : this.pin - 5), p);
+        }
+
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
             if (this._mode === NeoPixelMode.RGB_RGB) {
                 this.buf[offset + 0] = red;

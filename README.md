@@ -57,6 +57,18 @@ while (true) {
 }
 ```
 
+## Power estimate
+
+Call ``writePowerToSerial`` to print an estimate of the current used by the pixels for the given colors.
+
+```blocks
+let strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB_RGB)
+while(true) {
+    strip.show();
+    strip.writePowerToSerial();
+}
+```
+
 ## Example: Using HSL to produce a rainbow animation
 
 This program uses HSL colors to display an animated rainbow pattern along the first 12 NeoPixels. 
