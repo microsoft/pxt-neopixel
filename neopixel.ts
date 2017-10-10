@@ -280,7 +280,7 @@ namespace neopixel {
         /**
          * Estimates the electrical current (mA) consumed by the current light configuration.
          */
-        //% weight=9 blockI=neopixel_power block="%strip|power (mA)"
+        //% weight=9 blockId=neopixel_power block="%strip|power (mA)"
         //% advanced=true
         power(): number {
             const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
