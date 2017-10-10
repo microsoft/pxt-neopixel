@@ -278,17 +278,22 @@ namespace neopixel {
         }
 
         /**
-         * Estimates the power consumption for the entire strip and writes it to the serial.
+         * Estimates the electrical current (mA) consumed by the current light configuration.
          */
-        //% weight=9 blockI=neopixel_writepowertoserial block="%strip|write power to serial"
+        //% weight=9 blockI=neopixel_power block="%strip|power (mA)"
         //% advanced=true
-        writePowerToSerial() {
+        power(): number {
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
+            const end = this.start + this._length;
             let p = 0;
-            for (let i = 0; i < this.buf.length; ++i) {
-                p += this.buf[i];
+            for (let i = this.start; i < end; ++i) {
+                const ledoffset = i * stride;
+                for (let j = 0; j < stride; ++j) {
+                    p += this.buf[i + j];
+                }
             }
-            p = (p * 433) / 10000;            
-            serial.writeValue("P" + (this.pin <= 23 ? this.pin - 7 : this.pin - 5), p);
+            return this.length() / 2 /* 0.5mA per neopixel */
+                + (p * 433) / 10000; /* rought approximation */
         }
 
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
