@@ -77,8 +77,8 @@ namespace neopixel {
         //% weight=85 blockGap=8
         //% parts="neopixel"
         showRainbow(startHue: number = 1, endHue: number = 360) {
-            let start = neopixel.hsl(startHue, 100, 50);
-            let end = neopixel.hsl(endHue, 100, 50);
+            let start = new HSL(startHue, 100, 50);
+            let end = new HSL(endHue, 100, 50);
             let colors = neopixel.interpolateHSL(start, end, this._length, HueInterpolationDirection.Clockwise);
             for (let i = 0; i < colors.length; i++) {
                 let hsl = colors[i];
@@ -451,26 +451,10 @@ namespace neopixel {
             this.l = Math.clamp(0, 99, l);
         }
 
-        /**
-         * Shifts the hue of a HSL color
-         * @param hsl the HSL (hue, saturation, lightness) color
-         * @param offset value to shift the hue channel by; hue is between 0 and 360. eg: 10
-         */
-        //% weight=1
-        //% blockId="neopixel_rotate_hue" block="shift %hsl| hue by %offset"
-        //% advanced=true
         rotateHue(offset: number): void {
             this.h = (this.h + offset) % 360;
         }
 
-        /**
-         * Converts from an HSL (hue, saturation, luminosity) format color to an RGB (red, 
-         * green, blue) format color. Input ranges h between [0,360], s between 
-         * [0, 100], and l between [0, 100], and output r, g, b ranges between [0,255]
-        */
-        //% weight=2 blockGap=8
-        //% blockId="neopixel_hsl_to_rgb" block="%hsl| to RGB"
-        //% advanced=true
         toRGB(): number {
             //reference: https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
             let h = this.h;
@@ -506,7 +490,7 @@ namespace neopixel {
     }
 
     /**
-     * Creates a HSL (hue, saturation, luminosity) color
+     * Converts a HSL (hue, saturation, luminosity) color into a RGB color
      * @param hue value of the hue channel between 0 and 360. eg: 360
      * @param sat value of the saturation channel between 0 and 100. eg: 100
      * @param lum value of the luminosity channel between 0 and 100. eg: 50
@@ -514,8 +498,8 @@ namespace neopixel {
     //% weight=1
     //% blockId="neopixel_hsl" block="hue %hue|sat %sat|lum %lum"
     //% advanced=true
-    export function hsl(hue: number, sat: number, lum: number): HSL {
-        return new HSL(hue, sat, lum);
+    export function hsl(hue: number, sat: number, lum: number): number {
+        return new HSL(hue, sat, lum).toRGB();
     }
 
     export enum HueInterpolationDirection {
@@ -572,14 +556,14 @@ namespace neopixel {
         //interpolate
         let colors: HSL[] = [];
         if (steps === 1) {
-            colors.push(hsl(h1 + hStep, s1 + sStep, l1 + lStep));
+            colors.push(new HSL(h1 + hStep, s1 + sStep, l1 + lStep));
         } else {
             colors.push(startColor);
             for (let i = 1; i < steps - 1; i++) {
                 let h = (h1_100 + i * hStep) / 100 + 360;
                 let s = (s1_100 + i * sStep) / 100;
                 let l = (l1_100 + i * lStep) / 100;
-                colors.push(hsl(h, s, l));
+                colors.push(new HSL(h, s, l));
             }
             colors.push(endColor);
         }
