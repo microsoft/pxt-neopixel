@@ -1,6 +1,6 @@
 {
     "name": "neopixel",
-    "version": "0.3.10",
+    "version": "0.4.0",
     "description": "AdaFruit NeoPixel driver",
     "license": "MIT",
     "dependencies": {
