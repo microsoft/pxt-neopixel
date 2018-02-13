@@ -19,7 +19,9 @@ enum NeoPixelColors {
     //% block=purple
     Purple = 0xFF00FF,
     //% block=white
-    White = 0xFFFFFF
+    White = 0xFFFFFF,
+    //% block=black
+    Black = 0x000000
 }
 
 /**
