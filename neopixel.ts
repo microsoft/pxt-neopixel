@@ -119,16 +119,16 @@ namespace neopixel {
 
             //interpolate
             if (steps === 1) {
-                this.setPixelColor(0, hslToRgb(h1 + hStep, s1 + sStep, l1 + lStep))
+                this.setPixelColor(0, hsl(h1 + hStep, s1 + sStep, l1 + lStep))
             } else {
-                this.setPixelColor(0, hslToRgb(startHue, saturation, luminance));
+                this.setPixelColor(0, hsl(startHue, saturation, luminance));
                 for (let i = 1; i < steps - 1; i++) {
                     const h = (h1_100 + i * hStep) / 100 + 360;
                     const s = (s1_100 + i * sStep) / 100;
                     const l = (l1_100 + i * lStep) / 100;
-                    this.setPixelColor(i, hslToRgb(h, s, l));
+                    this.setPixelColor(i, hsl(h, s, l));
                 }
-                this.setPixelColor(steps - 1, hslToRgb(endHue, saturation, luminance));
+                this.setPixelColor(steps - 1, hsl(endHue, saturation, luminance));
             }
             this.show();
         }
@@ -483,7 +483,14 @@ namespace neopixel {
         return b;
     }
 
-    function hslToRgb(h: number, s: number, l: number): number {
+    /**
+     * Converts a hue saturation luminosity value into a RGB color
+     * @param h hue from 0 to 360
+     * @param s saturation from 0 to 99
+     * @param l luminosity from 0 to 99
+     */
+    //% blockId=neopixelHSL block="hue %h|saturation %s|luminosity %l"
+    export function hsl(h: number, s: number, l: number): number {
         h = h % 360;
         s = Math.clamp(0, 99, s);
         l = Math.clamp(0, 99, l);
