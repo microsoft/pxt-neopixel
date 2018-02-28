@@ -41,11 +41,6 @@ enum NeoPixelMode {
  */
 //% weight=5 color=#2699BF icon="\uf110"
 namespace neopixel {
-    //% shim=sendBufferAsm
-    //% parts="neopixel"
-    function sendBuffer(buf: Buffer, pin: DigitalPin) {
-    }
-
     /**
      * A NeoPixel strip
      */
@@ -237,7 +232,7 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            sendBuffer(this.buf, this.pin);
+            ws2812.sendBuffer(this.buf, this.pin);
         }
 
         /**
