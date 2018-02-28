@@ -232,7 +232,7 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            ws2812.sendBuffer(this.buf, this.pin);
+            ws2812b.sendBuffer(this.buf, this.pin);
         }
 
         /**
