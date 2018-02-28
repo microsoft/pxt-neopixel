@@ -1,10 +1,14 @@
 # NeoPixel driver
 
 This library provides a driver for various Neo Pixel LED strips, 
-see https://www.adafruit.com/category/168
+see https://www.adafruit.com/category/168.
 
-NeoPixels consist of programmable RGB LEDs (WS2812, WS2812B), every one of them controlled
+NeoPixels consist of programmable RGB LEDs (WS2812B), every one of them controlled
 separately.  
+
+## ~ hint
+
+See [Microsoft/pxt-ws2812b](https://makecode.microbit.org/pkg/microsoft/pxt-ws2812b) for basic WS2812B led support. 
 
 ## Basic usage
 
