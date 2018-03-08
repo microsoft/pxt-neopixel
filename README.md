@@ -48,8 +48,8 @@ while (true) {
     let x = input.acceleration(Dimension.X) / 2;
     let y = input.acceleration(Dimension.Y) / 2;
     let z = input.acceleration(Dimension.Z) / 2;
-    strip.setPixelColor(0, neopixel.rgb(x, y, -z));
     strip.shift(1);
+    strip.setPixelColor(0, neopixel.rgb(x, y, -z));
     strip.show();
     basic.pause(100);
 }
