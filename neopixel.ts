@@ -19,7 +19,9 @@ enum NeoPixelColors {
     //% block=purple
     Purple = 0xFF00FF,
     //% block=white
-    White = 0xFFFFFF
+    White = 0xFFFFFF,
+    //% block=black
+    Black = 0x000000
 }
 
 /**
@@ -39,11 +41,6 @@ enum NeoPixelMode {
  */
 //% weight=5 color=#2699BF icon="\uf110"
 namespace neopixel {
-    //% shim=sendBufferAsm
-    //% parts="neopixel"
-    function sendBuffer(buf: Buffer, pin: DigitalPin) {
-    }
-
     /**
      * A NeoPixel strip
      */
@@ -55,6 +52,7 @@ namespace neopixel {
         start: number; // start offset in LED strip
         _length: number; // number of LEDs
         _mode: NeoPixelMode;
+        _matrixWidth: number; // number of leds in a matrix - if any
 
         /**
          * Shows all LEDs to a given color (range 0-255 for r, g, b). 
@@ -117,16 +115,16 @@ namespace neopixel {
 
             //interpolate
             if (steps === 1) {
-                this.setPixelColor(0, hslToRgb(h1 + hStep, s1 + sStep, l1 + lStep))
+                this.setPixelColor(0, hsl(h1 + hStep, s1 + sStep, l1 + lStep))
             } else {
-                this.setPixelColor(0, hslToRgb(startHue, saturation, luminance));
+                this.setPixelColor(0, hsl(startHue, saturation, luminance));
                 for (let i = 1; i < steps - 1; i++) {
                     const h = (h1_100 + i * hStep) / 100 + 360;
                     const s = (s1_100 + i * sStep) / 100;
                     const l = (l1_100 + i * lStep) / 100;
-                    this.setPixelColor(i, hslToRgb(h, s, l));
+                    this.setPixelColor(i, hsl(h, s, l));
                 }
-                this.setPixelColor(steps - 1, hslToRgb(endHue, saturation, luminance));
+                this.setPixelColor(steps - 1, hsl(endHue, saturation, luminance));
             }
             this.show();
         }
@@ -183,6 +181,36 @@ namespace neopixel {
         }
 
         /**
+         * Sets the number of pixels in a matrix shaped strip
+         * @param width number of pixels in a row
+         */
+        //% blockId=neopixel_set_matrix_width block="%strip|set matrix width %width"
+        //% blockGap=8
+        //% weight=5
+        //% parts="neopixel" advanced=true
+        setMatrixWidth(width: number) {
+            this._matrixWidth = Math.min(this._length, width);
+        }
+
+        /**
+         * Set LED to a given color (range 0-255 for r, g, b) in a matrix shaped strip 
+         * You need to call ``show`` to make the changes visible.
+         * @param x horizontal position
+         * @param y horizontal position
+         * @param rgb RGB color of the LED
+         */
+        //% blockId="neopixel_set_matrix_color" block="%string|set matrix color at x %x|y %y|to %rgb=neopixel_colors" 
+        //% weight=4
+        //% parts="neopixel" advanced=true
+        setMatrixColor(x: number, y: number, rgb: number) {
+            if (this._matrixWidth <= 0) return; // not a matrix, ignore
+            const cols = this._length / this._matrixWidth;
+            if (x < 0 || x >= this._matrixWidth || y < 0 || y >= cols) return;
+            let i = x + y * this._matrixWidth;
+            this.setPixelColor(i, rgb);
+        }
+        
+        /**
          * For NeoPixels with RGB+W LEDs, set the white LED brightness. This only works for RGB+W NeoPixels.
          * @param pixeloffset position of the LED in the strip
          * @param white brightness of the white LED
@@ -204,7 +232,7 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            sendBuffer(this.buf, this.pin);
+            ws2812b.sendBuffer(this.buf, this.pin);
         }
 
         /**
@@ -280,6 +308,7 @@ namespace neopixel {
             strip.brightness = this.brightness;
             strip.start = this.start + Math.clamp(0, this._length - 1, start);
             strip._length = Math.clamp(0, this._length - (strip.start - this.start), length);
+            strip._matrixWidth = 0;
             return strip;
         }
 
@@ -437,6 +466,7 @@ namespace neopixel {
         strip.start = 0;
         strip._length = numleds;
         strip._mode = mode;
+        strip._matrixWidth = 0;
         strip.setBrightness(255)
         strip.setPin(pin)
         return strip;
@@ -481,7 +511,14 @@ namespace neopixel {
         return b;
     }
 
-    function hslToRgb(h: number, s: number, l: number): number {
+    /**
+     * Converts a hue saturation luminosity value into a RGB color
+     * @param h hue from 0 to 360
+     * @param s saturation from 0 to 99
+     * @param l luminosity from 0 to 99
+     */
+    //% blockId=neopixelHSL block="hue %h|saturation %s|luminosity %l"
+    export function hsl(h: number, s: number, l: number): number {
         h = h % 360;
         s = Math.clamp(0, 99, s);
         l = Math.clamp(0, 99, l);

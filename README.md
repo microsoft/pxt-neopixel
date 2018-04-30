@@ -1,10 +1,14 @@
 # NeoPixel driver
 
 This library provides a driver for various Neo Pixel LED strips, 
-see https://www.adafruit.com/category/168
+see https://www.adafruit.com/category/168.
 
-NeoPixels consist of programmable RGB LEDs (WS2812, WS2812B), every one of them controlled
+NeoPixels consist of programmable RGB LEDs (WS2812B), every one of them controlled
 separately.  
+
+## ~ hint
+
+See [Microsoft/pxt-ws2812b](https://makecode.microbit.org/pkg/microsoft/pxt-ws2812b) for basic WS2812B led support. 
 
 ## Basic usage
 
@@ -44,8 +48,8 @@ while (true) {
     let x = input.acceleration(Dimension.X) / 2;
     let y = input.acceleration(Dimension.Y) / 2;
     let z = input.acceleration(Dimension.Z) / 2;
-    strip.setPixelColor(0, neopixel.rgb(x, y, -z));
     strip.shift(1);
+    strip.setPixelColor(0, neopixel.rgb(x, y, -z));
     strip.show();
     basic.pause(100);
 }
