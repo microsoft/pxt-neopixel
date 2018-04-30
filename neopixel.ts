@@ -157,7 +157,7 @@ namespace neopixel {
             } else {
                 for (let i = 0; i < n; ++i) {
                     if (i <= v) {
-                        let b = i * Math.idiv(255, n1);
+                        const b = Math.idiv(i * 255, n1);
                         this.setPixelColor(i, neopixel.rgb(b, 0, 255 - b));
                     }
                     else this.setPixelColor(i, 0);
