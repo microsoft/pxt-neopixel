@@ -136,7 +136,8 @@ namespace neopixel {
          * @param high maximum value, eg: 255
          */
         //% weight=84
-        //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value |up to %high" icon="\uf080" blockExternalInputs=true
+        //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value|up to %high" 
+        //% icon="\uf080"
         //% parts="neopixel"
         showBarGraph(value: number, high: number): void {
             if (high <= 0) {
