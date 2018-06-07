@@ -526,7 +526,7 @@ namespace neopixel {
     export function hsl(h: number, s: number, l: number): number {
         h = Math.round(h);
         s = Math.round(s);
-        l = Math.round(s);
+        l = Math.round(l);
         
         h = h % 360;
         s = Math.clamp(0, 99, s);
