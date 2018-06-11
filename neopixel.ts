@@ -313,6 +313,7 @@ namespace neopixel {
             strip.start = this.start + Math.clamp(0, this._length - 1, start);
             strip._length = Math.clamp(0, this._length - (strip.start - this.start), length);
             strip._matrixWidth = 0;
+            strip._mode = this._mode;
             return strip;
         }
 
