@@ -136,7 +136,8 @@ namespace neopixel {
          * @param high maximum value, eg: 255
          */
         //% weight=84
-        //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value |up to %high" icon="\uf080" blockExternalInputs=true
+        //% blockId=neopixel_show_bar_graph block="%strip|show bar graph of %value|up to %high" 
+        //% icon="\uf080"
         //% parts="neopixel"
         showBarGraph(value: number, high: number): void {
             if (high <= 0) {
@@ -225,7 +226,7 @@ namespace neopixel {
             }
         }
 
-        /**
+        /** 
          * Send all the changes to the strip.
          */
         //% blockId="neopixel_show" block="%strip|show" blockGap=8
@@ -303,6 +304,7 @@ namespace neopixel {
         //% weight=89
         //% blockId="neopixel_range" block="%strip|range from %start|with %length|leds"
         //% parts="neopixel"
+        //% blockSetVariable=range
         range(start: number, length: number): Strip {
             let strip = new Strip();
             strip.buf = this.buf;
@@ -461,6 +463,7 @@ namespace neopixel {
     //% weight=90 blockGap=8
     //% parts="neopixel"
     //% trackArgs=0,2
+    //% blockSetVariable=strip
     export function create(pin: DigitalPin, numleds: number, mode: NeoPixelMode): Strip {
         let strip = new Strip();
         let stride = mode === NeoPixelMode.RGBW ? 4 : 3;
@@ -523,7 +526,7 @@ namespace neopixel {
     export function hsl(h: number, s: number, l: number): number {
         h = Math.round(h);
         s = Math.round(s);
-        l = Math.round(s);
+        l = Math.round(l);
         
         h = h % 360;
         s = Math.clamp(0, 99, s);
