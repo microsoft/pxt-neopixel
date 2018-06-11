@@ -10,6 +10,8 @@ separately.
 
 See [Microsoft/pxt-ws2812b](https://makecode.microbit.org/pkg/microsoft/pxt-ws2812b) for basic WS2812B led support. 
 
+## ~
+
 ## Basic usage
 
 ```blocks
@@ -52,18 +54,6 @@ while (true) {
     strip.setPixelColor(0, neopixel.rgb(x, y, -z));
     strip.show();
     basic.pause(100);
-}
-```
-
-## Power estimate
-
-Call ``writePowerToSerial`` to print an estimate of the current used by the pixels for the given colors.
-
-```blocks
-let strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB_RGB)
-while(true) {
-    strip.show();
-    strip.writePowerToSerial();
 }
 ```
 

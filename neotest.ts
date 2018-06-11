@@ -1,6 +1,13 @@
 {
     let strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB);
 
+    strip.showRainbow();
+    for (let i = 0; i <= strip.length(); i++) { 
+        strip.rotate();
+        strip.show();
+        basic.pause(100)
+    }
+    
     strip.showColor(NeoPixelColors.Red)
     basic.pause(2000)
     strip.showColor(NeoPixelColors.Green)
