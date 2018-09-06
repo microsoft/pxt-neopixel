@@ -63,9 +63,9 @@
     });
 
     while (true) {
-        let x = input.acceleration(Dimension.X) / 2
-        let y = input.acceleration(Dimension.Y) / 2
-        let z = input.acceleration(Dimension.Z) / 2
+        let x = input.acceleration(Dimension.X) >> 1
+        let y = input.acceleration(Dimension.Y) >> 1
+        let z = input.acceleration(Dimension.Z) >> 1
         if (rotationMode) {
             strip.rotate();
         } else {
