@@ -1,0 +1,21 @@
+{
+  "neopixel.create": "Erzeuge einen neuen Treiber für die gegebene Anzahl NeoPixels, die am angegebenen Port angeschlossen sind. Der Modus bestimmt die genaue Bauart der NeoPixel.",
+  "neopixel.Strip.showColor": "Setze alle Pixel auf die angegebene Farbe und rufe ``anzeigen`` auf.",
+  "neopixel.Strip.setBrigthness": "Setze die Helligkeit der NeoPixel (0-255). Die Änderung betrifft nur zukünftige Operationen.",
+  "neopixel.HSL.rotateHue": "Rotiert den Farbwert einer HSL-Farbe",
+  "neopixel.HSL.toRGB": "Konvertiert eine HSL-Farbe in eine RGB-Farbe.",
+  "neopixel.Strip.clear": "Schalte alle NeoPixel aus. Damit die Änderung sichtbar wird, muss anschließend ``anzeigen`` aufgerufen werden.",
+  "neopixel.Strip.easeBrightness": "Aktuelle Farben der NeoPixel je nach Pixelnr. abdunkeln.",
+  "neopixel.Strip.length": "Die Anzahl der NeoPixel, die der Treiber verwaltet.",
+  "neopixel.Strip.range": "Erstellt einen neuen Treiber für ein Intervall der vom angegebenen Treiber verwalteten NeoPixel.",
+  "neopixel.Strip.rotate": "Rotiert die Farben der NeoPixel. Damit die Änderung sichtbar wird, muss anschließend ``anzeigen`` aufgerufen werden.",
+  "neopixel.Strip.setPixelColor": "Setzt den NeoPixel mit der angegebenen Nr. auf die angegebene Farbe. Damit die Änderung sichtbar wird, muss anschließend ``anzeigen`` aufgerufen werden.",
+  "neopixel.Strip.setPixelWhiteLED": "Setzt die Helligkeit der weißen LED des NeoPixels mit der angegebenen Nr. Dies funktioniert nur für RGB+W Neopixel. Damit die Änderung sichtbar wird, muss anschließend ``anzeigen`` aufgerufen werden.",
+  "neopixel.Strip.shift": "Verschiebt die Farben der NeoPixel. Damit die Änderung sichtbar wird, muss anschließend ``anzeigen`` aufgerufen werden.",
+  "neopixel.Strip.showBarGraph": "Zeigt den angegebenen Wert in Bezug auf das gegebene Maximum als Balkendiagramm auf allen Neopixeln an.",
+  "neopixel.Strip.showRainbow": "Zeigt ein Regenbogenmuster auf allen NeoPixeln an.",
+  "neopixel.Strip.show": "Sendet alle Änderungen an die NeoPixel.",
+  "neopixel.hsl": "Erstellt eine HSL-Farbe",
+  "neopixel.rgb": "Erstellt eine RGB-Farbe",
+  "neopixel.colors": "bekannte RGB-Farben"
+}
