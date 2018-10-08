@@ -62,6 +62,7 @@ namespace neopixel {
         //% weight=85 blockGap=8
         //% parts="neopixel"
         showColor(rgb: number) {
+            rgb = rgb >> 0;
             this.setAllRGB(rgb);
             this.show();
         }
@@ -77,6 +78,8 @@ namespace neopixel {
         showRainbow(startHue: number = 1, endHue: number = 360) {
             if (this._length <= 0) return;
 
+            startHue = startHue >> 0;
+            endHue = endHue >> 0;
             const saturation = 100;
             const luminance = 50;
             const steps = this._length;
@@ -178,7 +181,7 @@ namespace neopixel {
         //% weight=80
         //% parts="neopixel" advanced=true
         setPixelColor(pixeloffset: number, rgb: number): void {
-            this.setPixelRGB(pixeloffset, rgb);
+            this.setPixelRGB(pixeloffset >> 0, rgb >> 0);
         }
 
         /**
@@ -190,7 +193,7 @@ namespace neopixel {
         //% weight=5
         //% parts="neopixel" advanced=true
         setMatrixWidth(width: number) {
-            this._matrixWidth = Math.min(this._length, width);
+            this._matrixWidth = Math.min(this._length, width >> 0);
         }
 
         /**
@@ -205,6 +208,9 @@ namespace neopixel {
         //% parts="neopixel" advanced=true
         setMatrixColor(x: number, y: number, rgb: number) {
             if (this._matrixWidth <= 0) return; // not a matrix, ignore
+            x = x >> 0;
+            y = y >> 0;
+            rgb = rgb >> 0;
             const cols = Math.idiv(this._length, this._matrixWidth);
             if (x < 0 || x >= this._matrixWidth || y < 0 || y >= cols) return;
             let i = x + y * this._matrixWidth;
@@ -220,9 +226,9 @@ namespace neopixel {
         //% blockGap=8
         //% weight=80
         //% parts="neopixel" advanced=true
-        setPixelWhiteLED(pixeloffset: number, white: number): void {
+        setPixelWhiteLED(pixeloffset: number, white: number): void {            
             if (this._mode === NeoPixelMode.RGBW) {
-                this.setPixelW(pixeloffset, white);
+                this.setPixelW(pixeloffset >> 0, white >> 0);
             }
         }
 
@@ -306,6 +312,8 @@ namespace neopixel {
         //% parts="neopixel"
         //% blockSetVariable=range
         range(start: number, length: number): Strip {
+            start = start >> 0;
+            length = length >> 0;
             let strip = new Strip();
             strip.buf = this.buf;
             strip.pin = this.pin;
@@ -326,6 +334,7 @@ namespace neopixel {
         //% weight=40
         //% parts="neopixel"
         shift(offset: number = 1): void {
+            offset = offset >> 0;
             const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             this.buf.shift(-offset * stride, this.start * stride, this._length * stride)
         }
@@ -339,6 +348,7 @@ namespace neopixel {
         //% weight=39
         //% parts="neopixel"
         rotate(offset: number = 1): void {
+            offset = offset >> 0;
             const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
         }
