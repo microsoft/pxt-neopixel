@@ -292,7 +292,6 @@ namespace neopixel {
                 const br = k > mid
                     ? Math.idiv(255 * (this._length - 1 - k) * (this._length - 1 - k), (mid * mid))
                     : Math.idiv(255 * k * k, (mid * mid));
-                serial.writeLine(k + ":" + br);
                 const r = (buf[ledoffset + 0] * br) >> 8; buf[ledoffset + 0] = r;
                 const g = (buf[ledoffset + 1] * br) >> 8; buf[ledoffset + 1] = g;
                 const b = (buf[ledoffset + 2] * br) >> 8; buf[ledoffset + 2] = b;
