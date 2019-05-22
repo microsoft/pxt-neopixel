@@ -12,7 +12,9 @@
         "neopixel.ts",
         "_locales/ja/neopixel-strings.json",
         "_locales/de/neopixel-strings.json",
-        "_locales/de/neopixel-jsdoc-strings.json"
+        "_locales/de/neopixel-jsdoc-strings.json",
+        "_locales/fr/neopixel-strings.json",
+        "_locales/fr/neopixel-jsdoc-strings.json"
     ],
     "testFiles": [
         "neotest.ts"
