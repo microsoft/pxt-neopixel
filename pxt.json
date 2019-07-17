@@ -5,7 +5,7 @@
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+        "ws2812b": "github:Microsoft/pxt-ws2812b"
     },
     "files": [
         "README.md",
@@ -14,7 +14,8 @@
         "_locales/de/neopixel-strings.json",
         "_locales/de/neopixel-jsdoc-strings.json",
         "_locales/fr/neopixel-strings.json",
-        "_locales/fr/neopixel-jsdoc-strings.json"
+        "_locales/fr/neopixel-jsdoc-strings.json",
+        "_locales/zh/neopixel-strings.json"
     ],
     "testFiles": [
         "neotest.ts"
