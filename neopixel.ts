@@ -378,8 +378,8 @@ namespace neopixel {
                     p += this.buf[i + j];
                 }
             }
-            return Math.idiv(this.length(), 2) /* 0.5mA per neopixel */
-                + Math.idiv(p * 433, 10000); /* rought approximation */
+            return Math.idiv(this.length() * 7, 10) /* 0.7mA per neopixel */
+                + Math.idiv(p * 480, 10000); /* rought approximation */
         }
 
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {

@@ -28,5 +28,6 @@
             }
         }
     },
-    "public": true
+    "public": true,
+    "preferredEditor": "tsprj"
 }
