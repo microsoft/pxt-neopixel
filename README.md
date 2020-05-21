@@ -1,7 +1,5 @@
 # NeoPixel driver
 
-[![Community Discord](https://img.shields.io/discord/448979533891371018.svg)](https://aka.ms/makecodecommunity)
-
 This library provides a driver for various Neo Pixel LED strips, 
 see https://www.adafruit.com/category/168.
 
