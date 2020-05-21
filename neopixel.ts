@@ -29,11 +29,11 @@ enum NeoPixelColors {
  */
 enum NeoPixelMode {
     //% block="RGB (GRB format)"
-    RGB = 0,
+    RGB = 1,
     //% block="RGB+W"
-    RGBW = 1,
+    RGBW = 2,
     //% block="RGB (RGB format)"
-    RGB_RGB = 2
+    RGB_RGB = 3
 }
 
 /**
@@ -247,14 +247,7 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            /*
-#define LIGHTMODE_RGB 1
-#define LIGHTMODE_RGBW 2
-#define LIGHTMODE_RGB_RGB 3
-#define LIGHTMODE_DOTSTAR 4            
-            */
-            const m = this._mode + 1;
-            ws2812b.setBufferMode(this.pin, m);
+            ws2812b.setBufferMode(this.pin, this._mode);
             ws2812b.sendBuffer(this.buf, this.pin);
         }
 
@@ -504,7 +497,7 @@ namespace neopixel {
         strip.buf = pins.createBuffer(numleds * stride);
         strip.start = 0;
         strip._length = numleds;
-        strip._mode = mode;
+        strip._mode = mode || NeoPixelMode.RGB;
         strip._matrixWidth = 0;
         strip.setBrightness(128)
         strip.setPin(pin)
