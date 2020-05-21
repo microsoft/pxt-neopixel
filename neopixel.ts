@@ -254,7 +254,7 @@ namespace neopixel {
 #define LIGHTMODE_DOTSTAR 4            
             */
             const m = this._mode + 1;
-            ws2812b.setMode(this.pin, m);
+            ws2812b.setBufferMode(this.pin, m);
             ws2812b.sendBuffer(this.buf, this.pin);
         }
 
