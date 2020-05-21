@@ -247,6 +247,14 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
+            /*
+#define LIGHTMODE_RGB 1
+#define LIGHTMODE_RGBW 2
+#define LIGHTMODE_RGB_RGB 3
+#define LIGHTMODE_DOTSTAR 4            
+            */
+            const m = this._mode + 1;
+            ws2812b.setMode(this.pin, m);
             ws2812b.sendBuffer(this.buf, this.pin);
         }
 
