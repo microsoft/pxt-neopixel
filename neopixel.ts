@@ -247,8 +247,6 @@ namespace neopixel {
         //% weight=79
         //% parts="neopixel"
         show() {
-            // only supported in beta
-            // ws2812b.setBufferMode(this.pin, this._mode);
             ws2812b.sendBuffer(this.buf, this.pin);
         }
 
@@ -500,7 +498,7 @@ namespace neopixel {
         strip._length = numleds;
         strip._mode = mode || NeoPixelMode.RGB;
         strip._matrixWidth = 0;
-        strip.setBrightness(128)
+        strip.setBrightness(50)
         strip.setPin(pin)
         return strip;
     }
