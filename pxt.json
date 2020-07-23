@@ -5,7 +5,6 @@
     "license": "MIT",
     "dependencies": {
         "core": "*"
-        //"ws2812b": "github:microsoft/pxt-ws2812b"
     },
     "files": [
         "README.md",
