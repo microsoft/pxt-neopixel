@@ -32,7 +32,7 @@
   "neopixel.hsl|block": "HSL-Farbe: Farbwert %hue|Sättigung %sat|Helligkeit %lum",
   "neopixel.Strip.power|block": "%strip|Stromverbrauch (mA)",
   "neopixel.rgb|block": "rot %red|grün %green|blau %blue",
-  "neopixel.Strip.setMatrixColor|block": "%string|setze Matrix Farbe an Position x %x|y %y|auf %rgb=neopixel_colors",
+  "neopixel.Strip.setMatrixColor|block": "%strip|setze Matrix Farbe an Position x %x|y %y|auf %rgb=neopixel_colors",
   "neopixel.Strip.setMatrixWidth|block": "%strip|setze Matrix Breite %width",
   "{id:category}Neopixel": "NeoPixel"
 }
