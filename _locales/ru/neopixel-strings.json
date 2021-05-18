@@ -25,7 +25,7 @@
   "neopixel.Strip.shift|block": "%strip|verschiebe NeoPixel um %offset",
   "neopixel.Strip.showBarGraph|block": "%strip|zeige Balkendiagramm von Wert %value |mit Maximum %high",
   "neopixel.Strip.showColor|block": "%strip|zeige Farbe %rgb=neopixel_colors",
-  "neopixel.Strip.showRainbow|block": "%strip|zeige Regenbogen von Farbton %startHue|bis %endHue",
+  "neopixel.Strip.showRainbow|block": "%strip|показать радугу с тоном от %startHue|до %endHue",
   "neopixel.Strip.show|block": "%strip|показать",
   "neopixel.colors|block": "%color",
   "neopixel.create|block": "NeoPixels на контакте %pin|с %numleds|светодиодами типа %mode",
