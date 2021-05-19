@@ -23,7 +23,7 @@
   "neopixel.Strip.setPixelColor|block": "%strip|установить цвет пикселя %pixeloffset|на %rgb=neopixel_colors",
   "neopixel.Strip.setPixelWhiteLED|block": "%strip|установить белую подсветку пикселя %pixeloffset|на  %white",
   "neopixel.Strip.shift|block": "%strip|сдвинуть пиксели на %offset| позиций",
-  "neopixel.Strip.showBarGraph|block": "%strip|показать диаграмму значения %value |при максимуме %high",
+  "neopixel.Strip.showBarGraph|block": "%strip|показать диаграмму значения %value |при верхней границе %high",
   "neopixel.Strip.showColor|block": "%strip|показать цвет %rgb=neopixel_colors",
   "neopixel.Strip.showRainbow|block": "%strip|показать радугу с тоном от %startHue|до %endHue",
   "neopixel.Strip.show|block": "%strip|показать",
