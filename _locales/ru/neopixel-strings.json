@@ -28,7 +28,7 @@
   "neopixel.Strip.showRainbow|block": "%strip|показать радугу с тоном от %startHue|до %endHue",
   "neopixel.Strip.show|block": "%strip|показать",
   "neopixel.colors|block": "%color",
-  "neopixel.create|block": "Светодиодная лента на контакте %pin| из пикселей %numleds|штук типа %mode",
+  "neopixel.create|block": "NeoPixel на контакте %pin| с числом пикселей %numleds|штук типа %mode",
   "neopixel.hsl|block": "HSL формат: тон %hue|насыщенность %sat|светлота %lum",
   "neopixel.Strip.power|block": "%strip|'электрический ток (мА)",
   "neopixel.rgb|block": "RGB формат: красный %red|зеленый %green|голубой %blue",
