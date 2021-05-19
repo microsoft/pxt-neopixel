@@ -22,7 +22,7 @@
   "neopixel.Strip.setBrightness|block": "%strip|установить яркость %brightness",
   "neopixel.Strip.setPixelColor|block": "%strip|установить цвет пикселя %pixeloffset|на %rgb=neopixel_colors",
   "neopixel.Strip.setPixelWhiteLED|block": "%strip|установить белую подсветку пикселя %pixeloffset|на  %white",
-  "neopixel.Strip.shift|block": "%strip|сдвинуть пикселей на %offset| позиций",
+  "neopixel.Strip.shift|block": "%strip|сдвинуть пиксели на %offset| позиций",
   "neopixel.Strip.showBarGraph|block": "%strip|показать диаграмму значения %value |при максимуме %high",
   "neopixel.Strip.showColor|block": "%strip|показать цвет %rgb=neopixel_colors",
   "neopixel.Strip.showRainbow|block": "%strip|показать радугу с тоном от %startHue|до %endHue",
@@ -32,7 +32,7 @@
   "neopixel.hsl|block": "HSL формат: тон %hue|насыщенность %sat|светлота %lum",
   "neopixel.Strip.power|block": "%strip|'электрический ток (мА)",
   "neopixel.rgb|block": "RGB формат: красный %red|зеленый %green|голубой %blue",
-  "neopixel.Strip.setMatrixColor|block": "%strip|установить цвет матрица в позиции x %x|y %y|на %rgb=neopixel_colors",
-  "neopixel.Strip.setMatrixWidth|block": "%strip|установить число пикселей в матрице %width",
+  "neopixel.Strip.setMatrixColor|block": "%strip|установить цвет матрицы в позиции x %x|y %y|на %rgb=neopixel_colors",
+  "neopixel.Strip.setMatrixWidth|block": "%strip|установить ширину светодиодной матрицы %width",
   "{id:category}Neopixel": "NeoPixel"
 }
