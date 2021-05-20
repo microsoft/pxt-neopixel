@@ -30,7 +30,7 @@
   "neopixel.colors|block": "%color",
   "neopixel.create|block": "NeoPixel на контакте %pin| с числом пикселей %numleds|штук типа %mode",
   "neopixel.hsl|block": "HSL формат: тон %hue|насыщенность %sat|светлота %lum",
-  "neopixel.Strip.power|block": "%strip|'электрический ток (мА)",
+  "neopixel.Strip.power|block": "%strip|электрический ток (мА)",
   "neopixel.rgb|block": "RGB формат: красный %red|зеленый %green|голубой %blue",
   "neopixel.Strip.setMatrixColor|block": "%strip|установить цвет матрицы в позиции x %x|y %y|на %rgb=neopixel_colors",
   "neopixel.Strip.setMatrixWidth|block": "%strip|установить ширину светодиодной матрицы %width",
