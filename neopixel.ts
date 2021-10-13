@@ -199,6 +199,7 @@ namespace neopixel {
         //% parts="neopixel" advanced=true
         setMatrixWidth(width: number) {
             this._matrixWidth = Math.min(this._length, width >> 0);
+            pins.setMatrixWidth(this.pin, this._matrixWidth)
         }
 
         /**
