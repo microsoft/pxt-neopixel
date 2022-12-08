@@ -26,7 +26,7 @@
   "neopixel.Strip.shift|block": "desplazar LEDs de %strip|en %offset",
   "neopixel.Strip.showBarGraph|block": "trazar diagrama de barras en %strip|desde %value|hasta %high",
   "neopixel.Strip.showColor|block": "establecer color de %strip|a %rgb=neopixel_colors",
-  "neopixel.Strip.showRainbow|block": "mostrar arco iris en %strip|desde %startHue|hasta %endHue",
+  "neopixel.Strip.showRainbow|block": "mostrar arcoiris en %strip|desde %startHue|hasta %endHue",
   "neopixel.Strip.show|block": "mostrar %strip|",
   "neopixel.colors|block": "%color",
   "neopixel.create|block": "NeoPixel en pin %pin|con %numleds|LEDs en %mode",
