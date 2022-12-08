@@ -10,7 +10,7 @@
   "NeoPixelColors.White|block": "blanco",
   "NeoPixelColors.Yellow|block": "amarillo",
   "NeoPixelMode.RGBW|block": "RGB+W",
-  "NeoPixelMode.RGB_RGB|block": "RGB (formato GRB)",
+  "NeoPixelMode.RGB_RGB|block": "RGB (formato RGB)",
   "NeoPixelMode.RGB|block": "RGB (formato RGB)",
   "neopixel.Strip.clear|block": "eliminar %strip",
   "neopixel.Strip.easeBrightness|block": "disminuir luminosidad de %strip",
