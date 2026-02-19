@@ -1,11 +1,11 @@
 {
     "name": "neopixel",
-    "version": "0.6.13",
+    "version": "0.7.6",
     "description": "AdaFruit NeoPixel driver",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+        "ws2812b": "github:microsoft/pxt-ws2812b#v0.1.1"
     },
     "files": [
         "README.md",
@@ -13,19 +13,17 @@
         "_locales/ja/neopixel-strings.json",
         "_locales/de/neopixel-strings.json",
         "_locales/de/neopixel-jsdoc-strings.json",
+        "_locales/es-ES/neopixel-strings.json",
         "_locales/fr/neopixel-strings.json",
-        "_locales/fr/neopixel-jsdoc-strings.json"
+        "_locales/fr/neopixel-jsdoc-strings.json",
+        "_locales/zh/neopixel-strings.json"
     ],
     "testFiles": [
         "neotest.ts"
     ],
     "public": true,
-    "targetVersions": {
-        "target": "8.1.11",
-        "targetId": "calliopemini"
-    },
     "supportedTargets": [
-        "calliopemini"
+        "microbit"
     ],
     "preferredEditor": "tsprj",
     "yotta": {
