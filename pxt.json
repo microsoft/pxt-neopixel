@@ -19,6 +19,15 @@
     "testFiles": [
         "neotest.ts"
     ],
+    "public": true,
+    "targetVersions": {
+        "target": "8.1.11",
+        "targetId": "calliopemini"
+    },
+    "supportedTargets": [
+        "calliopemini"
+    ],
+    "preferredEditor": "tsprj",
     "yotta": {
         "config": {
             "microbit-dal": {
@@ -27,6 +36,5 @@
                 }
             }
         }
-    },
-    "public": true
+    }
 }
