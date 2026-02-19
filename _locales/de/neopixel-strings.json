@@ -29,7 +29,7 @@
   "neopixel.Strip.show|block": "%strip|anzeigen",
   "neopixel.colors|block": "%color",
   "neopixel.create|block": "NeoPixels an Pin %pin|mit %numleds|Pixeln und Modus %mode",
-  "neopixel.hsl|block": "HSL-Farbe: Farbwert %hue|Sättigung %sat|Helligkeit %lum",
+  "neopixel.hsl|block": "HSL-Farbe: Farbwert %h|Sättigung %s|Helligkeit %l",
   "neopixel.power|block": "%strip|Stromverbrauch (mA)",
   "neopixel.rgb|block": "rot %red|grün %green|blau %blue",
   "neopixel.setMatrixColor|block": "%string|setze Matrix Farbe an Position x %x|y %y|auf %rgb=neopixel_colors",
