@@ -10,6 +10,8 @@
     "files": [
         "README.md",
         "neopixel.ts",
+		"_locales/cs/neopixel-strings.json",
+		"_locales/cs/neopixel-jsdoc-strings.json",
         "_locales/ja/neopixel-strings.json",
         "_locales/de/neopixel-strings.json",
         "_locales/de/neopixel-jsdoc-strings.json",
