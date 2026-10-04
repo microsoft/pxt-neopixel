@@ -189,6 +189,21 @@ namespace neopixel {
         }
 
         /**
+         * Returns an array of RGB, GRB or RGBW values for the given pixel in a strip
+         * @param pixeloffset position of the NeoPixel in the strip
+         */
+        //% blockId=neopixel_get_pixel_colors block="%strip|get pixel %pixel"
+        //% strip.defl=strip
+        //% blockGap=8
+        //% weight=5
+        //% parts="neopixel" advanced=true
+        getPixelColor(pixeloffset: number, ){
+            if (pixeloffset < 0 || pixeloffset >= this._length) return [];
+            const stride = this._mode === NeoPixelMode.RGBW ? 4 : 3;
+            return this.buf.chunked(stride).get(pixeloffset).toArray(NumberFormat.UInt8LE)
+        }
+
+        /**
          * Sets the number of pixels in a matrix shaped strip
          * @param width number of pixels in a row
          */
